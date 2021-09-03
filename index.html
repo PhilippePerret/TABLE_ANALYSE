@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TABLE D'ANALYSE</title>
+  <script type="text/javascript" src="js/jquery/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="js/jquery/jquery.form.min.js"></script>
+
+  <!-- STYLES -->
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/AMarque.css">
+  <link rel="stylesheet" type="text/css" href="css/Preferences.css">
+  <link rel="stylesheet" type="text/css" href="css/Manuel.css">
+  <link rel="stylesheet" type="text/css" href="css/Editeur.css">
+  <link rel="stylesheet" type="text/css" href="css/GetterInList.css">
+</head>
+<body>
+  <!-- STAVES -->
+  <iframe id="staves2" class="hidden" src="/Users/philippeperret/Programmes/Staves/index.htm"></iframe>
+
+  <!-- TABLE D'ANALYSE -->
+  <section id="content">
+    <!-- Partie où seront placés tous les éléments de l'analyse -->
+  </section>
+
+  <!-- PIED DE PAGE -->
+  <footer>
+    <img id="cb_staves_lock" class="btn fright" src="img/staves_lock.svg" />
+    <img id="cb_recording" class="btn fright" src="img/recording.svg" >
+    <button class="btn fright" onclick="Record.read.call(Record)">Lire</button>
+    <button id="btn-activer-son" class="btn fright" onclick="Piano.activate.call(Piano)">Activer le son</button>
+    <span>Manuel : ⇧M</span><span> | </span><span>Préférences : ⇧P</span>
+  </footer>
+
+
+  <!-- <script type="text/javascript" src="js/Tone.js"></script> -->
+  <script type="text/javascript" src="js/webmidi-2.5.3/webmidi.min.js"></script>
+  <script type="text/javascript" src="js/Message.js"></script>
+  <script type="text/javascript" src="js/Piano.js"></script>
+  <script type="text/javascript" src="js/GetterInList.js"></script>
+
+  <script type="text/javascript" src="js/AObjet.js"></script>
+
+  <script type="text/javascript" src="config.js" defer></script>
+  <script type="text/javascript" src="js/dom.js" defer></script>
+  <script type="text/javascript" src="js/main.js" defer></script>
+  <script type="text/javascript" src="js/App.js" defer></script>
+  <script type="text/javascript" src="js/data.js" defer></script>
+  <script type="text/javascript" src="js/handies.js" defer></script>
+  <script type="text/javascript" src="js/UI.js" defer></script>
+  <script type="text/javascript" src="js/Preferences.js" defer></script>
+  <script type="text/javascript" src="js/Preferences_AppData.js" defer></script>
+  <script type="text/javascript" src="js/Manuel.js" defer></script>
+  <script type="text/javascript" src="js/Manuel_AppData.js" defer></script>
+  <script type="text/javascript" src="js/AMarque.js" defer></script>
+  <script type="text/javascript" src="js/Systeme.js" defer></script>
+  <script type="text/javascript" src="js/Editeur.js" defer></script>
+  <script type="text/javascript" src="js/KeyboardEvents.js" defer></script>
+  <script type="text/javascript" src="js/Record.js" defer></script>
+  <script type="text/javascript" src="js/Interconnect.js" defer></script>
+  <script type="text/javascript" src="js/Interconnexion_App.js" defer></script>
+
+</body>
+</html>
