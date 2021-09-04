@@ -77,7 +77,7 @@ buildSelectorsInHead(){
   var selectors = []
   PreferencesAppData.forEach(dp => {
     if ( undefined == dp.selector ) return ;
-    selectors.push(`${dp.selector} {${dp.selector_value.replace(/__VALUE__/, my.data[dp.id])}}`)
+    selectors.push(`${dp.selector} {${dp.selector_value.replace(/__VALUE__/g, my.data[dp.id])}}`)
   })
   return selectors.join("\n")  
 }

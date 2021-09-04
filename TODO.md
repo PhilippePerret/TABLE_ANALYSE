@@ -12,6 +12,11 @@
   * [BUG] Quand on lance/arrête l'enregistrement par MAJ-R, il faut aussi "toggler" le bouton du footer
 
 ## FONCTIONNALITÉS
+
+  * Sauver la partition analysée de façon différente
+    - "scanner" une première fois la page en enregistrant tous les éléments dans l'ordre
+    - aux scans suivants, relever les modifications, les ajouts et les suppressions
+  * À la lecture, toujours classer les éléments de gauche à droite et de haut en bas 
   
   * [PhilHarmonieFont] Pouvoir écrire les notes en minuscule (peut-être ALT + note)
     la = æ, si = ß, do = ©, ré = ∂, mi = ê, fa = ƒ, sol = ﬁ

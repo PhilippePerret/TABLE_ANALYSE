@@ -42,19 +42,22 @@ const TYPES_NOTES = {
  * 
  */
 const AMARQUES_TYPES = {
-    'acc': {name:'Accord',        value:'acc', default:'c', message:"Nom de l'accord"}
-  , 'har': {name:'Harmonie',      value:'har', default:'I', message:"Chiffrage"}
-  , 'mod': {name:'Modulation',    value:'mod', default:'c', message:"Nouvelle tonalité"}
-  , 'emp': {name:'Emprunt',       value:'emp', default:'c', message:"Tonalité de l'emprunt"}
-  , 'cad': {name:'Cadence…',      value:'cad', subtype:true, autocontent:true}
-  , 'ped': {name:'Pédale',        value:'ped', default:'1', message:"Degré de la pédale"}
-  , 'txt': {name:'Texte',         value:'txt', default:'', message:"Texte à afficher"}
+    'acc': {name:'Accord',        ajustX:12,  ajustY:8,     value:'acc', default:'c', message:"Nom de l'accord"}
+  , 'har': {name:'Harmonie',      ajustX:16,  ajustY:8,     value:'har', default:'I', message:"Chiffrage"}
+  , 'mod': {name:'Modulation',    ajustX:24,  ajustY:-80,   value:'mod', default:'c', message:"Nouvelle tonalité"}
+  , 'emp': {name:'Emprunt',       ajustX:4,   ajustY:-60,   value:'emp', default:'c', message:"Tonalité de l'emprunt"}
+  , 'cad': {name:'Cadence…',      ajustX:-70, ajustY:14,    value:'cad', subtype:true, autocontent:true}
+  , 'ped': {name:'Pédale',        ajustX:20,  ajustY:10,    value:'ped', default:'1', message:"Degré de la pédale"}
+  , 'txt': {name:'Texte',         ajustX:0,   ajustY:23,    value:'txt', subtype:true, default:'',  message:"Texte à afficher"}
   , 'seg': {name:'Segment',       value:'seg', default:'membre 1', message:"Légende (vide si aucune)"}
   , 'not': {name:'Type de note…', value:'not', subtype:true}
   , 'cir': {name:'Cercle',        value:'cir', default:'', message:"Légende (vide si aucune)"}
   , 'box': {name:'cadre',         value:'box', default:'', message:"Légende (vide si aucune)"}
 }
 
+// Liste des types (ci-dessus) qui doivent utiliser la 
+// fonte PhilHarmonieFont
+const TYPES_PHILHARMONIEFONT = ['acc','har','mod','emp','cad','ped']
 
 class AMark_Editor {
 
@@ -172,6 +175,9 @@ onSetContent(content){
   this._amark_content = this.hasProlong 
     ? content.substring(0, content.length - 2) 
     : content
+  // On met toujours une prolongation à une pédale, même lorsqu'elle
+  // n'est pas indiquée
+  if ( this.amark_type == 'ped' ) this.hasProlong = true
   this.proceed()
 }
 
@@ -213,7 +219,7 @@ get hasAutoContent(){
 // mini-éditeur)
 get position(){
   // return this._pos || (this._pos = {top:this.event.layerY, left:this.event.layerX})
-  return this._pos || (this._pos = {top:this.event.pageY, left:this.event.pageX})
+  return this._pos || (this._pos = {top:this.event.pageY - 40, left:this.event.pageX - 40})
 }
 
 // La valeur par défaut, en fonction du type
@@ -275,6 +281,12 @@ get paramsGetterOfSubtype(){
       d = {
           values: Object.values(TYPES_NOTES)
         , message:"Type de la note :"
+      }
+      break
+    case 'txt':
+      d = {
+          values: [{name:"Gros", value:'size1'}, {name:"Moyen", value:'size2'}, {name:"Petit", value:'size3'}]
+        , message:"Taille du texte"
       }
       break
     default:

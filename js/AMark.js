@@ -201,6 +201,8 @@ buildGetterTypeCadence(){
   build(){
     var css = ['amark', 'aobj']
     css.push(this.type)
+    if (TYPES_PHILHARMONIEFONT.includes(this.type)) css.push('philharm')
+    if ( this.subtype ) css.push(this.subtype) 
     console.log("css:", css)
     var o = DCreate('DIV', {id:"marque", class:css.join(' ')})
     this.contentSpan = DCreate('SPAN', {class:'content', text:this.content})
