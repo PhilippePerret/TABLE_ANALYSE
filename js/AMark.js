@@ -411,6 +411,9 @@ buildGetterTypeCadence(){
     const my = this;
     listen(this.obj, 'click', this.toggleSelect.bind(this))
     listen(this.obj, 'dblclick', this.onDoubleClick.bind(this))
+    if (['box','cir'].includes(this.type) ) {
+      $(this.obj).resizable()
+    }
     // Draggable
     $(this.obj).draggable({
         rien:function(){}

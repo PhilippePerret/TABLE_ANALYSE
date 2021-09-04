@@ -14,10 +14,6 @@ body {
   border: 2px solid transparent;
   z-index: 0;
 }
-.aobj.selected {
-  border: 2px solid blue;
-  z-index: 20;
-}
 
 iframe {
   display: block;

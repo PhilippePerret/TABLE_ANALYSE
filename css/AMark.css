@@ -145,3 +145,99 @@ div.amark.cad div.mtype {
   right: 0px;
   width: 180px;
 }
+
+div.amark.seg {
+  border: 6px solid #333;
+  overflow: visible;
+}
+div.amark.seg span.content {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+
+div.amark.seg.h-up span.content {
+  top: -40px;
+}
+div.amark.seg.h-down span.content {
+  bottom: -42px;
+}
+
+
+div.amark.seg.h-up,
+div.amark.seg.h-down
+{
+  width: 200px;
+  height: 30px;  
+}
+div.amark.seg.v-right,
+div.amark.seg.v-left
+{
+  width: 30px;
+  height: 200px;  
+}
+div.amark.seg.v-left span.content {
+  text-align: right;
+  width: 150px;
+  left: -170px;
+}
+div.amark.seg.v-right span.content{
+  text-align: left;
+  width: 150px;
+  right: -170px;
+}
+
+div.amark.seg.h-up {
+  border-bottom-width: 0px;
+}
+div.amark.seg.h-down {
+  border-top-width: 0px;  
+}
+div.amark.seg.v-right {
+  border-left-width: 0px; 
+}
+div.amark.seg.v-left {
+  border-right-width: 0px;  
+}
+
+div.amark.not {
+  background-color: white;
+}
+div.amark.not:not(.selected) {
+  border: 2px solid #333;
+  border-radius: 50px;
+}
+
+div.amark.cir span.content, 
+div.amark.box span.content 
+{
+  display: none;
+}
+
+div.amark.cir,
+div.amark.box 
+{
+  border-color: #399933;
+}
+
+div.amark.cir {
+  border-width: 5px;
+  border-style: solid;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+div.amark.box {
+  width: 200px;
+  height: 100px;
+}
+div.amark.box {
+  border: 5px solid #339;
+}
+
+
+div.amark.selected {
+  background-color: rgba(150,180,250, 0.4);
+  z-index: 20;
+}

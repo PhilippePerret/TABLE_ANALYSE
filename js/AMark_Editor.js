@@ -28,9 +28,12 @@ const CADENCES = {
 }
 
 const TYPES_NOTES = {
-    'np': {name:'Note de passage',  value:'np'}
-  , 'br': {name:'Broderie',         value:'br'}
-  , 'in': {name:'Note naturelle',   value:'in'}
+    'np': {name:'Note de passage',  value:'np', autocontent:'NP'}
+  , 're': {name:'Retard',           value:'re', autocontent:'R'}
+  , 'br': {name:'Broderie',         value:'br', autocontent:'BR'}
+  , 'db': {name:'Double-broderie',  value:'db', autocontent:'DBR'}
+  , 'in': {name:'Note naturelle',   value:'in', autocontent:'NN'}
+  , 'an': {name:'Anacrouse',        value:'an', autocontent:'ANA'}
 }
 
 /**
@@ -49,10 +52,10 @@ const AMARQUES_TYPES = {
   , 'cad': {name:'Cadence…',      ajustX:-70, ajustY:14,    value:'cad', subtype:true, autocontent:true}
   , 'ped': {name:'Pédale',        ajustX:20,  ajustY:10,    value:'ped', default:'1', message:"Degré de la pédale"}
   , 'txt': {name:'Texte',         ajustX:0,   ajustY:23,    value:'txt', subtype:true, default:'',  message:"Texte à afficher"}
-  , 'seg': {name:'Segment',       value:'seg', default:'membre 1', message:"Légende (vide si aucune)"}
-  , 'not': {name:'Type de note…', value:'not', subtype:true}
-  , 'cir': {name:'Cercle',        value:'cir', default:'', message:"Légende (vide si aucune)"}
-  , 'box': {name:'cadre',         value:'box', default:'', message:"Légende (vide si aucune)"}
+  , 'seg': {name:'Segment',       value:'seg', subtype:true, default:'membre 1', message:"Légende (vide si aucune)"}
+  , 'not': {name:'Type de note…', value:'not', subtype:true, autocontent:true}
+  , 'cir': {name:'Cercle',        value:'cir'}
+  , 'box': {name:'cadre',         value:'box'}
 }
 
 // Liste des types (ci-dessus) qui doivent utiliser la 
@@ -191,6 +194,9 @@ setAutoContent(){
     case 'cad':
       this._amark_content = CADENCES[this.amark_subtype].autocontent
       break
+    case 'not':
+      this._amark_content = TYPES_NOTES[this.amark_subtype].autocontent
+      break
     default:
       erreur("Impossible de définir l'autocontent du type '"+this.amark_type+"'…")
   }
@@ -287,6 +293,12 @@ get paramsGetterOfSubtype(){
       d = {
           values: [{name:"Gros", value:'size1'}, {name:"Moyen", value:'size2'}, {name:"Petit", value:'size3'}]
         , message:"Taille du texte"
+      }
+      break
+    case 'seg':
+      d = {
+          values:[{name:'À plat sur la portée', value:'h-up'}, {name:'À plat sous la portée', value:'h-down'}, {name:'Droit à gauche', value:'v-left'}, {name:'Droit à droite', value:'v-right'}]
+        , message:"Disposition du segment"
       }
       break
     default:
