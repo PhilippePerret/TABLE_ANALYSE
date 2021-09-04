@@ -1,174 +1,162 @@
 'use strict';
 
-/**
- * Les types de marques (modulation, emprunt, pédale, etc.)
- * Ils déterminent aussi leur type.
- * 
- */
-const AMARQUES_TYPES = ['mod','emp','ped', 'cad']
-const CADENCES = {
-    'par': {name:'Cadence parfaite',   value:'par'}
-  , 'imp': {name:'Cadence imparfaite', value:'imp'}
-  , 'dem': {name:'Demi-cadence',       value:'dem'}
-  , 'ita': {name:'Cadence italienne',  value:'ita'}
-  , 'rom': {name:'Cadence rompue',     value:'rom'}
-  , 'pla': {name:'Cadence plagale',    value:'pla'}
-  , 'fau': {name:'Cadence fauréenne',  value:'fau'}
-}
+
 
 class AMarque extends AObjet {
 
   /**
    * Pour créer un nouvel objet à l'endroit du double-clic
    * 
-   * @param {Event} e L'event double-click
-   */
-  static createNew(e){
-    const newM = new AMarque({top: e.layerY - 30, left:e.layerX - 30, id:AObjet.items.length + 1})
-    newM.isNew = true // pour la détruire si abandon
-    newM.build_and_observe()
-    Record.ON && Record.add(`amarque::create::[[${JSON.stringify(newM.data)}]]`)
-    newM.toggleSelect(e)
-    newM.edit()    
-  }
-
-
-  constructor(data){
-    super(data)
-    this.type = this.data.type = 'marque'
-  }
-
-
-  /**
-   * Quand on clique sur la marque pour la (dé)sélectionner
+   * La méthode fonctionne en deux temps :
+   *  1) choix du type (type) de la marque (avec un GetterInList)
+   *  2) contenu (value) de la marque (avec un Mini-éditeur)
    * 
+   * @param {Event}   e L'event double-click
+   * @param {String}  type    Le type de la marque. Défini seulement 
+   *                          après son choix
+   * @param {String}  value   Valeur textuelle de l'élément
    */
-  toggleSelect(e){
-    if (this.isSelected) {
-      //
-      // Déselectionner l'objet
-      //
-      this.deselect()
-    } else {
-      //
-      // Sélectionner l'objet
-      //
-      this.select()
-    }
-    if (e) return stopEvent(e)
-  }
-  select(){
-    this.obj.classList.add('selected')
-    AObjet.setSelection(this)
-    this.isSelected = true
-  }
-  deselect(){
-    this.obj.classList.remove('selected')
-    this.isSelected = false
-  }
+  static createNew(e, params){
+    if ( undefined == params ) {
+      const editor = new AMark_Editor({event:e, onReleaseMethod: this.createNew.bind(this, e)})
+      return editor.proceed()
 
-  /**
-   * Quand on double clique sur l'élément => édition pour le moment
-   * 
-   */
-  onDoubleClick(e){
-    try{
-      this.edit()
-    } catch(err){
-      console.error(err)
-    }
-    return stopEvent(e)// important
-  }
-
-  edit(){
-    this.editor = this.editor || new Editeur(this)
-    this.editor.value = this.content + (this.hasLigneProlongation ? '--' : '')
-    this.editor.positionne({top:this.top, left:this.left})
-    // Cf. la note sur la méthode 'positionne' de l'éditeur
-    this.editor.show()
-  }
-
-  destroy(){
-    this.obj.remove() // c'est tout ?
-  }
-
-  /**
-   * Appelée par l'éditeur pour modifier la valeur
-   * 
-   * Note : des marques peuvent indiquer la nature de la nouvelle
-   * valeur :
-   * 
-   *  '--' à la fin indique qu'il faut un trait de prolongation
-   *  'mod:' au début indique que c'est une modulation
-   *  'emp:' au début indique que c'est un emprunt
-   *  'ped:'  ""  "" indique que c'est une pédale
-   */
-  setValue(newvalue){
-    if ( newvalue === null) {
+    } else if ( null === params ) {
 
       //
-      // L'édition a été annulée. Si c'est une création de note
-      // alors elle doit être détruite.
+      // Annulation de l'utilisateur
       //
-      if ( this.isNew ) {
-        this.destroy()
-      }
+      return
 
     } else {
+
       //
-      // La valeur a été modifiée
+      // Paramètres fournis, on peut construire la marque
       //
-      var realvalue ; // la valeur qui sera affichée
-      delete this._type
-      if ( newvalue.endsWith('--') && newvalue.split(':')[0] != 'cad' ){
-        newvalue = newvalue.substring(0, newvalue.length - 2)
-        this.buildLigneProlongation()
-      } else if (this.hasLigneProlongation && !newvalue.endsWith('--')) {
-        this.destroyLigneProlongation()
-      }
 
-      let [pref, value] = newvalue.split(':')
-      if ( value ) pref = pref.toLowerCase()
-      else {
-        value = pref
-        pref  = null
-      }
-
-      if ( pref == 'cad') {
-          // Pour une cadence, on ajoute un petit plus visible 
-          // seulement à l'édition, pour ajouter les accords
-          // précédents
-          this.signePlusCad || this.buildSignePlusCadence()
-      }
-
-      // console.log("realvalue = '%s', newvalue = '%s', pref = '%s'", value = '%s', realvalue, newvalue, pref, value)
-      if (pref) {
-        this.type = pref
-        realvalue = value
-      } else {
-        if ( newvalue.match(/^[IV]/) ){
-          // console.log("'%s' est une harmonie", newvalue)
-          this.type = 'har'
-        }
-      }
-
-
-
-      Record.ON && Record.add(`amarque::set_value::${this.id}::${newvalue}`)
-
-      this.content      = newvalue
-      this.realContent  = realvalue || newvalue
-      if ( this.type ) {
-        this.obj.classList.add(this.type)
-        this.setFontSizePerType()
-      }
-      this.isNew = false
-
-      if ( pref && pref == 'cad' ) this.chooseCadenceType()
-
+      // console.log("Je vais créer la marque avec les données : ", params)
+      Object.assign(params, {id: AObjet.items.length + 1})
+      const newMark = new AMarque(params)
+      newMark.setValues(params)
+      newMark.build_and_observe()
+      newMark.toggleSelect(null)
     }
   }
 
+
+constructor(data){
+  super(data)
+}
+
+
+/**
+ * Quand on clique sur la marque pour la (dé)sélectionner
+ * 
+ */
+toggleSelect(e){
+  if (this.isSelected) {
+    //
+    // Déselectionner l'objet
+    //
+    this.deselect()
+  } else {
+    //
+    // Sélectionner l'objet
+    //
+    this.select()
+  }
+  if (e) return stopEvent(e)
+}
+select(){
+  this.obj.classList.add('selected')
+  AObjet.setSelection(this)
+  this.isSelected = true
+}
+deselect(){
+  this.obj.classList.remove('selected')
+  this.isSelected = false
+}
+
+/**
+ * Quand on double clique sur l'élément => édition pour le moment
+ * 
+ */
+onDoubleClick(e){
+  try{
+    this.edit()
+  } catch(err){
+    console.error(err)
+  }
+  return stopEvent(e)// important
+}
+
+/**
+ * Édition de la marque
+ * 
+ * Noter qu'on ne peut pas changer le type de la marque. Pour faire
+ * un autre type de marque, supprimer la marque et en refaire une
+ * autre
+ * 
+ */
+edit(){
+  this.editor = this.editor || new Editeur(this)
+  this.editor.value = this.content + (this.prolongLineBuilt ? '--' : '')
+  this.editor.show({top:this.top, left:this.left}, AMARQUES_TYPES[this.type].message)
+}
+
+destroy(){
+  this.obj.remove() // c'est tout ?
+}
+
+/**
+ * Définition des valeurs à la création de la marque
+ * Elles sont envoyées depuis la méthode AMarque.createNew()
+ */
+setValues(values){
+  this.content  = values.content
+  this.top      = values.top
+  this.left     = values.left
+  this.subtype  = values.subtype
+  this.prolong  = values.prolong
+  this.type     = values.type
+}
+
+/**
+ * Redéfinition de la valeur de la marque d'analyse
+ * 
+ * Est appelée seulement par le mini-éditeur lorsque l'on veut 
+ * modifier le texte de la marque.
+ * Rappel : pour chager de marque (de type), il faut détruire la
+ * marque actuelle et en créer une autre.
+ * 
+ *  '--' à la fin indique qu'il faut un trait de prolongation
+ * 
+ */
+setValue(newvalue){
+  const hasProlong = newvalue.endsWith('--')
+  const content = hasProlong ? newvalue.substring(0, newvalue.length - 2) : newvalue
+
+  /**
+   * 
+   * LIGNE DE PROLONGATION
+   * À ajouter ou à retirer
+   * 
+   */
+  if ( hasProlong && !this.isCadence ){
+    this.buildLigneProlongation()
+  } else if ( this.prolongLineBuilt && !hasProlong ) {
+    this.destroyLigneProlongation()
+  }
+
+  /**
+   * Petit "+" visible à l'édition pour allonger la cadence
+   */
+  if ( this.isCadence ) {
+    this.signePlusCad || this.buildSignePlusCadence()
+  }
+}
+
+get isCadence(){ return this.type == 'cad'}
 
 /**
  * Si le type de la marque est une cadence (markType = 'cad') alors
@@ -189,7 +177,7 @@ onChooseTypeCadence(cadenceType){
   // On marque la cadence
   this.marquerCadence()
   // On recorde la donnée
-  Record.ON && Record.add(`amarque::set_cadence_type::${this.id}::${cadenceType}`)
+  Record.ON && Record.add(`amark::set_cadence_type::${this.id}::${cadenceType}`)
 }
 get getterCadenceType(){
   return this._gettertypecad||(this._gettertypecad = this.buildGetterTypeCadence())
@@ -211,35 +199,21 @@ buildGetterTypeCadence(){
 
 
   build(){
-    var o = DCreate('DIV', {id:"marque", class:"amarque aobj"})
-    this.contentSpan = DCreate('SPAN', {class:'content'})
+    var css = ['amark', 'aobj']
+    css.push(this.type)
+    console.log("css:", css)
+    var o = DCreate('DIV', {id:"marque", class:css.join(' ')})
+    this.contentSpan = DCreate('SPAN', {class:'content', text:this.content})
     o.appendChild(this.contentSpan)
     UI.tableAnalyse.appendChild(o)
     o.style.left = px(this.left)
     o.style.top  = px(this.top)
     this.obj = o
-    this.type && this.obj.classList.add(this.type)
-    this.setFontSizePerType()
-    this.content = 'c' // Do
+    // S'il faut une ligne de prolongation, on la construit
+    this.prolong && this.buildLigneProlongation()
+    // S'il faut un "+" de cadence, on le construit
+    this.isCadence && this.buildSignePlusCadence()
   }
-
-
-/**
- * Définir la taille de la police ne fonction du type
- * 
- */
-setFontSizePerType(){
-  this.contentSpan.style.fontSize = px((t => {
-    const defaultSize = Pref.marque_accords_size
-    switch(t){
-      case 'ped':       return defaultSize * 0.5
-      case 'har': case 'cad':  
-        return Pref.marque_harmonie_size
-    }
-    return defaultSize
-  }
-  )(this.type))
-}
 
 
   /**
@@ -382,7 +356,7 @@ setFontSizePerType(){
    * TRAITEMENT LIGNE DE PROLONGATION
    * 
    */
-  get hasLigneProlongation(){return this.prolongLine}
+  get prolongLineBuilt(){return this.prolongLine}
   buildLigneProlongation(){
     if ( ! this.prolongLine ) {
       this.prolongLine = DCreate('DIV', {class:'ligne_prolong'})
@@ -425,7 +399,7 @@ setFontSizePerType(){
 
 
   destroyLigneProlongation(){
-    if (this.hasLigneProlongation){
+    if (this.prolongLineBuilt){
       this.prolongLine.remove()
       $(this.obj).resizable("disabled")
     }
@@ -450,11 +424,9 @@ setFontSizePerType(){
 
   get type(){return this._type}
   set type(t){
+    this.obj && this._type && this.obj.classList.remove(this._type)
     this._type = t
-    if (this.obj) {
-      AMARQUES_TYPES.forEach(t => this.obj.classList.remove(t))
-      this.obj.classList.add(this._type)
-    }
+    this.obj && this.obj.classList.add(this._type)
   }
 
   get realContent(){return this.contentSpan.innerHTML}
@@ -464,8 +436,7 @@ setFontSizePerType(){
   // exemple, il faut tout remettre
   get content(){return this._content}
   set content(v){
-    // console.log("Je mets le contenu à '%s'", v)
     this._content = v
-    this.contentSpan.innerHTML = v
+    this.contentSpan && (this.contentSpan.innerHTML = v)
   }
 }

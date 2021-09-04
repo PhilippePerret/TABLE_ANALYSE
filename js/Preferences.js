@@ -20,6 +20,7 @@ class PreferencesClass {
 
 init(){
   this.data // pour l'instancier
+  this.insertStylesInHead()
 }
 
 toggle(){
@@ -42,6 +43,45 @@ show(){
   this.obj.classList.remove('hidden')
 }
 
+/**
+ * Méthode qui applique les préférences dans l'interface
+ * 
+ * Fonctionnement
+ * --------------
+ * On écrit une balise STYLE dans le dom, à la fin du HEAD (donc 
+ * après toutes les définitions) où vont être reprises toutes les
+ * valeurs en les affectant aux classes (selectors) adéquats.
+ * Par exemple, la préférence 'marque_accords_size' définit la taille
+ * des marques d'accord dans l'application Table d'analyse. Donc, on
+ * met dans cette balise style :
+ *    div.aobj.acc {font-size: <size>px;}
+ * 
+ * Dès qu'une préférence de ce type (on les reconnait au fait 
+ * qu'elles définisssent la propriété 'selector') est modifiée, on 
+ * actualise cette balise style.
+ */
+insertStylesInHead(){
+  const my = this
+  this.stylesTagInHead = DCreate('STYLE',{type:'text/css', text: this.buildSelectorsInHead()})
+  document.head.appendChild(this.stylesTagInHead)
+}
+/**
+ * Méthode pour actualiser les préférences dans les selectors de
+ * head
+ */
+updateStylesInHead(){
+  this.stylesTagInHead.innerHTML = this.buildSelectorsInHead()
+}
+buildSelectorsInHead(){
+  const my = this
+  var selectors = []
+  PreferencesAppData.forEach(dp => {
+    if ( undefined == dp.selector ) return ;
+    selectors.push(`${dp.selector} {${dp.selector_value.replace(/__VALUE__/, my.data[dp.id])}}`)
+  })
+  return selectors.join("\n")  
+}
+
 
 get data(){return this._data || this.getData()}
 
@@ -57,9 +97,7 @@ build(){
   if ( 'undefined' == typeof PreferencesAppData) {
     erreur("Il faut définir la constant 'PreferencesAppData' définissant les données de préférences")
   } else {
-    this.defaultData = {} // pour mettre les valeurs par défaut
     PreferencesAppData.forEach( dp => {
-      Object.assign(this.defaultData, {[dp.id]: dp.default})
       if ( dp.type == 'inputtext'){
         o.appendChild(this.buildInputText(dp))
       } else if ( dp.type == 'checkbox' ) {
@@ -77,6 +115,7 @@ build(){
 }
 
 observe(){
+  $(this.obj).draggable()
   listen(this.obj, 'dblclick', e => {return stopEvent(e)})
 }
 
@@ -84,7 +123,7 @@ saveData(key, val){
   if ( 'function' == typeof val ) val = val.call()
   this.data[key] = val
   localStorage.setItem(key, val)
-  Record.ON && Record.preference(key, val)
+  if ( this.appPrefData[key].selector ) { this.updateStylesInHead() }
 }
 
 getData(){
@@ -104,9 +143,14 @@ getData(){
 /**
  * On met les valeurs pas défaut aux valeurs non définies
  * 
+ * On en profite pour faire la table appPrefData qui contient en clé
+ * l'identifiant de la préférence et en valeur sa donnée complète 
+ * (sauf la valeur)
  */
 defaultize(data){
+  this.appPrefData = {}
   PreferencesAppData.forEach(dp => {
+    Object.assign(this.appPrefData, {[dp.id]: dp})
     if (undefined == data[dp.id]) Object.assign(data, {[dp.id]: dp.default})
   })
   return data

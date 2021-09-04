@@ -2,7 +2,7 @@
 /**
  * 
  * Classe AObjet
- * -------------------
+ * -------------
  * Pour donner la constante AObjets qui est la liste de tous les
  * objets d'analyse
  * 
@@ -98,8 +98,8 @@ class AObjet {
 
   get height(){return this._height || (this._height = this.obj.offsetHeight)}
   get top(){return this._top || (this._top = this.obj.offsetTop)}
-  set top(v){this._top = v; this.obj.style.top = px(v)}
+  set top(v){this._top = v; this.obj && (this.obj.style.top = px(v))}
 
   get left(){return this._left || (this._left = this.obj.offsetLeft)}
-  set left(v){this._left = v; this.obj.style.left = px(v)}
+  set left(v){this._left = v; this.obj && (this.obj.style.left = px(v))}
 }

@@ -31,6 +31,7 @@ class GetterInList {
   
   constructor(data){
     this.data = data
+    this.data.items || Object.assign(this.data, {items: data.values})
     this.build()
     this.observe()
   }

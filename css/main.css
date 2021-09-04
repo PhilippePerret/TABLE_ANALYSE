@@ -99,8 +99,6 @@ div.aobj {
 
 img.systeme {
   position: absolute;
-  /*width: 90%; Très mauvaise idée, car ça change tout à chaque fois suivant la taille de la fenêtre*/
-  width: 1860px; /* c'est maintenant une préférence */
 }
 
 /* Les messages à l'écran */

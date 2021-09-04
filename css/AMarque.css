@@ -1,16 +1,16 @@
-div.amarque {
+div.amark {
   font-family: "PhilHarmonieFont8";
   overflow: hidden;
   z-index: 2;
 }
 
 
-div.amarque span.content {
+div.amark span.content {
   padding: 8px;
 }
 
 /* Ligne de prolongation */
-div.amarque div.ligne_prolong {
+div.amark div.ligne_prolong {
   display: inline-block;
   width: 200px;
   border-top: 3px solid #222;
@@ -20,11 +20,11 @@ div.amarque div.ligne_prolong {
 }
 
 /* La poignée pour allonger la ligne de prolongation */
-div.amarque:not(.selected) div.handler_prolong {
+div.amark:not(.selected) div.handler_prolong {
   display: none;
 }
 
-div.amarque.selected div.handler_prolong {
+div.amark.selected div.handler_prolong {
   display: inline-block;
   position: absolute;
   height: 200px; /*overflow hidden*/
@@ -32,23 +32,23 @@ div.amarque.selected div.handler_prolong {
   right: 0px;
 }
 
-div.amarque.selected div.handler_prolong:not(.activated){
+div.amark.selected div.handler_prolong:not(.activated){
   background-color: #C9FFC5;
   width: 15px;
 }
-div.amarque.selected div.handler_prolong.activated {
+div.amark.selected div.handler_prolong.activated {
   background-color: red;
   width: 50px;
 }
 
 
 /* Pour le différents types de marque (modulation, pédale, etc.) */
-div.amarque.ped {
+div.amark.ped {
 
 }
 
 /* Pédale */
-div.amarque.ped span.content {
+div.amark.ped span.content {
   display: inline-block;
   font-size: 30pt;
   vertical-align: bottom;
@@ -63,38 +63,38 @@ div.amarque.ped span.content {
 }
 
 /*Emprunt et modulation*/
-div.amarque.emp, 
-div.amarque.mod {
+div.amark.emp, 
+div.amark.mod {
   width: 134px;
   height: 110px;
   background-size: cover;
   background-position: 0px 0px;
 }
-div.amarque.emp {
+div.amark.emp {
   background-image: url("../img/emprunt.png");
   padding-top: 70px;
   padding-left: 20px;
 }
-div.amarque.mod {
+div.amark.mod {
   background-image: url("../img/modulation.png"); 
   padding-top: 70px;
   padding-left: 20px;
 }
-div.amarque.emp span.content,
-div.amarque.mod span.content {
+div.amark.emp span.content,
+div.amark.mod span.content {
   display: inline-block;
   padding: unset;
   transform: rotate(-40deg);
 }
-div.amarque.emp span.content {
+div.amark.emp span.content {
   margin-left: 16px;
 }
-div.amarque.mod span.content {
+div.amark.mod span.content {
   margin-left: 0px;
 }
 
 /* Cadence */
-div.amarque.cad {
+div.amark.cad {
   border-width: 0 5px 5px 0;
   border-style: solid;
   border-color: #333;
@@ -104,24 +104,24 @@ div.amarque.cad {
   overflow: unset; /* il faut montrer ce qui dépasse */
   z-index: 1;
 }
-div.amarque.cad.selected {
+div.amark.cad.selected {
   border-width: 2px;
   border-color: unset;
 }
-div.amarque.cad span.content {
+div.amark.cad span.content {
   display: inline-block;
   padding: unset;
   padding-right: 24px;
   margin-top: 12px;
 }
 
-div.amarque.cad button.plus_sign,
-div.amarque.cad button.moins_sign {
+div.amark.cad button.plus_sign,
+div.amark.cad button.moins_sign {
   float: left;
   margin-top: 27px;
 }
-div.amarque.cad:not(.selected) button.plus_sign,
-div.amarque.cad:not(.selected) button.moins_sign {
+div.amark.cad:not(.selected) button.plus_sign,
+div.amark.cad:not(.selected) button.moins_sign {
   display: none;
 }
 /* Pour le nom de la cadence 
@@ -130,7 +130,7 @@ div.amarque.cad:not(.selected) button.moins_sign {
   d'autres marques pourraient nécessiter ce genre d'ajouter ou de
   précision
 */
-div.amarque.cad div.mtype {
+div.amark.cad div.mtype {
   position: absolute;
   font-family: 'Arial Narrow', Helvetica, Geneva, Arial;
   font-size: 18pt;

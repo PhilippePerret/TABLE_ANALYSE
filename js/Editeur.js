@@ -14,6 +14,10 @@
  *    ed.positionne({top:<nombre ou valeur>, left:<nombre ou valeur>, fixed:true/*pour position fixed * /})
  * 
  *    ed.show()
+ *    
+ *    OU 
+ * 
+ *    ed.show({top:..., left:..., titre:...})
  */
 
 
@@ -27,7 +31,9 @@ class Editeur {
         Object.assign(data, {setMethod: owner.setValue.bind(owner)})
       }
     }
-    this.data   = data
+    data.titre || Object.assign(data, {titre: data.message})
+
+    this.data = data
   }
 
   init(){
@@ -35,8 +41,10 @@ class Editeur {
   }
 
   // Ouvrir l'éditeur
-  show(){
+  show(position, message){
     this.init()
+    position && this.positionne(position)
+    message  && (this.titre = v)
     this.obj.classList.remove('hidden')
     this.textField.focus()
     this.textField.select()
@@ -98,6 +106,7 @@ class Editeur {
     // divBoutons.appendChild(DCreate('BUTTON', {text:'OK', class:'ok'}))
     o.appendChild(divBoutons)
     this.obj = o
+    this.data.titre && (this.titre = this.data.titre)
     document.body.appendChild(o)
   }
   observe(){
@@ -140,6 +149,8 @@ class Editeur {
    *  (méthode 'show') sinon la page va scroller jusqu'à lui tout en
    *  bas, et rester en bas tandis que l'éditeur aura peut-être été 
    *  placé en haut.
+   *  Le mieux est tout simplement d'envoyer la position à la méthode
+   *  show
    */
   positionne(pos){
     this.top  = pos.top

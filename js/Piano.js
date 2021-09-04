@@ -92,7 +92,7 @@ class PianoClass {
     document.body.appendChild(o)
     Object.assign(this.tagsNotes, {[note.replace(/d/,'#')+octave]: o})
     o.addEventListener('loadeddata', e => {
-      console.log("Note %s%s chargée", note, octave)
+      // console.log("Note %s%s chargée", note, octave)
       o.volume = Pref.note_volume
     })
   }
@@ -111,15 +111,21 @@ function initMidi(){
       // console.log(WebMidi.inputs);
       // console.log(WebMidi.outputs);
       const input = WebMidi.inputs[0];
-      input.addListener('noteon', "all", function(e) {
-        Piano.play(e.note.name, e.note.octave)
-        if ( UI.StavesON ) {
-          Duplex.send({operation:'NOTE', note:e.note})
-        }
-      });
-      input.addListener('noteoff', 'all', function(e){
-        Piano.stop(e.note.name, e.note.octave)
-      })
+      if ( input ) {
+        Piano.MIDI_ON = true
+        input.addListener('noteon', "all", function(e) {
+          Piano.play(e.note.name, e.note.octave)
+          if ( UI.StavesON ) {
+            Duplex.send({operation:'NOTE', note:e.note})
+          }
+        });
+        input.addListener('noteoff', 'all', function(e){
+          Piano.stop(e.note.name, e.note.octave)
+        })
+      } else {
+        console.info("Pas de clavier MIDI branché.")
+        Piano.MIDI_ON = false
+      }
     }
   
   });

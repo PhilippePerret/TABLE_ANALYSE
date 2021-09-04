@@ -61,9 +61,9 @@ class RecordClass {
    *  Replacement de tous les systèmes sous 
    *        'systeme::move_all_under::<id système>::<data déplacement>' // cf. Systeme.toggleMoving
    *  Création d'une marque d'analyse
-   *        'amarque::create::[[<données>]]'
+   *        'amark::create::[[<données>]]'
    *  Enregistrement du contenu d'une marque d'analyse
-   *        'amarque::set_value::<id amarque>::[[<nouvelle valeur>]]'
+   *        'amark::set_value::<id amark>::[[<nouvelle valeur>]]'
    * 
    */
   read(prefix){
@@ -97,7 +97,7 @@ class RecordClass {
       case 'systeme':
         // => réglage d'un système
         return this.actionOnSysteme(action, dope)
-      case 'amarque':
+      case 'amark':
         // => réglage d'une marque d'analyse
         return this.actionOnAMarque(action, dope)
     }

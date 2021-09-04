@@ -8,9 +8,15 @@
 
 ## BUG MINEURS
 
+  * [BUG] Tenir compte d'un maximum de préférences à leur modification (vérifier à la fermeture des préférences).
   * [BUG] Quand on lance/arrête l'enregistrement par MAJ-R, il faut aussi "toggler" le bouton du footer
 
 ## FONCTIONNALITÉS
+  
+  * [PhilHarmonieFont] Pouvoir écrire les notes en minuscule (peut-être ALT + note)
+    la = æ, si = ß, do = ©, ré = ∂, mi = ê, fa = ƒ, sol = ﬁ
+
+  * Pouvoir dupliquer les objets avec ALT - Drag
 
   * [pour descendre les accords et autres marques supérieurs avec le système] Avant de procéder au déplacement de tous les éléments après le déplacement d'un système, l'application demanderait d'indiquer depuis où on doit considérer les éléments à descendre. En cliquant au-dessus du premier accord ou de l'objet d'analyse le plus haut, on descendrait tout aussi
 
