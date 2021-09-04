@@ -50,6 +50,21 @@ constructor(data){
 
 
 /**
+ * Les données qui seront enregistrées
+ * 
+ */
+get dataForRecord(){
+  var dfr = super.dataForRecord
+  Object.assign(dfr, {
+      type:     this.type
+    , subtype:  this.subtype
+    , content:  this.content
+    , prolong:  !!this.prolong
+  })
+  return dfr
+}
+
+/**
  * Quand on clique sur la marque pour la (dé)sélectionner
  * 
  */
@@ -204,7 +219,7 @@ buildGetterTypeCadence(){
     if (TYPES_PHILHARMONIEFONT.includes(this.type)) css.push('philharm')
     if ( this.subtype ) css.push(this.subtype) 
     console.log("css:", css)
-    var o = DCreate('DIV', {id:"marque", class:css.join(' ')})
+    var o = DCreate('DIV', {id:this.domId, class:css.join(' ')})
     this.contentSpan = DCreate('SPAN', {class:'content', text:this.content})
     o.appendChild(this.contentSpan)
     UI.tableAnalyse.appendChild(o)
@@ -434,9 +449,6 @@ buildGetterTypeCadence(){
     this.obj && this.obj.classList.add(this._type)
   }
 
-  get realContent(){return this.contentSpan.innerHTML}
-  set realContent(v){this.contentSpan.innerHTML = v}
-
   // Le contenu complet, avec préfixe (aka type). Pour l'édition, par
   // exemple, il faut tout remettre
   get content(){return this._content}
@@ -444,4 +456,6 @@ buildGetterTypeCadence(){
     this._content = v
     this.contentSpan && (this.contentSpan.innerHTML = v)
   }
+
+  get domId(){return this._domid || (this._domid = `amark-${this.id}`)}
 }

@@ -1,4 +1,16 @@
 'use strict';
+
+const TOLERANCE_Y = 20 ;
+
+/**
+ * Méthode qui retourne TRUE quand les nombres y1 et y2, représentant
+ * des offsetTop, sont à moins de TOLERANCE_Y, donc sont considérés
+ * comme proches
+ */
+function nearY(y1, y2){
+  return Math.abs(y2, y1) < TOLERANCE_Y
+}
+
 class RecordClass {
 
   get ON(){return this.isRecording === true}
@@ -9,7 +21,8 @@ class RecordClass {
    */
   toggle(){
     if (this.isRecording) this.stop()
-    else this.start()
+    else this.save() // on sauve TODO lancer une boucle d'enregistrement
+    // else this.start()
   }
 
   /**
@@ -38,15 +51,68 @@ class RecordClass {
   /**
    * Pour ajouter l'opération op (alias de 'save')
    */
-  add(op){return this.save(op)}
+  add(op){
+    return // coupe circuit
+    return this.save(op)
+  }
 
   /**
-   * Pour enregistrer l'opération +op+
+   * Enregistrement de l'écran actuel
+   * 
+   *  - On passe en revue tous les objets présents,
+   *  - on les classe de gauche à droite et de haut en bas
+   *  - on détruit les données actuelles
+   *  - on les enregistre dans le stockage
    * 
    */
-  save(op){
-    this.set(`${this.prefix}-operation-${++this.ioperation}`, op)
-    this.set(`${this.prefix}-nombre_operations`, this.ioperation)
+  save(){
+    var eListe = []
+    AObjet.items.forEach(e => {
+      console.log("e:", e.data)
+      if ( DGet(`#${e.domId}`) ) {
+        console.log("L'objet #%s existe encore, avec les données", e.domId, e.dataForRecord)
+        eListe.push(e.dataForRecord)
+      } else {
+        console.log("L'object n'existe plus")
+      }
+    })
+
+    this.prefix = 'photo'
+
+    // 
+    // Nombre d'objets enregistrées pour ce préfixe et nombre
+    // d'objets à sauver
+    //
+    const nombreObjetsSaved = this.get(`${this.prefix}-nombre-objets-saved`, 0)
+    const nombreObjectCourants = eListe.length
+
+    //
+    // Classement des objets
+    //
+    eListe.sort(this.objetSorting.bind(this))
+
+    //
+    // Enregistrement des objets
+    //
+    for (var io = 0; io < nombreObjectCourants; ++ io) {
+      this.set(`${this.prefix}-objet-${io}`, JSON.stringify(eListe[io]))
+    }
+
+    //
+    // Destruction des objets qui "dépassent" (if any)
+    // 
+    if ( nombreObjetsSaved > nombreObjectCourants ) {
+      // TODO
+    }
+  }
+
+  /**
+   * Méthode de classement des objets
+   * 
+   * De gauche à droite et de haut en bas
+   */
+  objetSorting(a, b){
+    return (a.top < (b.top - TOLERANCE_Y) || (nearY(a.top, b.top) && a.left < b.left)) ? 1 : -1
   }
 
 
@@ -188,7 +254,7 @@ class RecordClass {
    * de stockage
    * 
    */
-  get(key){ return this.stockage.getItem(key) }
+  get(key, defaut){ return this.stockage.getItem(key) || defaut }
   set(key,value){this.stockage.setItem(key,value)}
 
 

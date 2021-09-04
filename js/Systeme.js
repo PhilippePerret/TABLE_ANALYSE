@@ -31,8 +31,9 @@ class Systeme extends AObjet {
   static writeNextSystem(isysteme, currentTop){
     const my = this
     my.all || my.init()
+    AObjet.items || AObjet.init()
     currentTop = currentTop || Pref.top_first_system
-    const sys = new Systeme({top:currentTop, index:isysteme /*, width: Pref.systeme_width */})
+    const sys = new Systeme({id:AObjet.items.length + 1, top:currentTop, index:isysteme /*, width: Pref.systeme_width */})
     my.all.push(sys)
     sys.tryToBuild()
       .then( _ => my.writeNextSystem(++isysteme, (sys.top + sys.height + Pref.distance_systemes)))
@@ -57,10 +58,21 @@ class Systeme extends AObjet {
   constructor(data){
     super(data)
     this.index  = data.index
-    // this.width  = data.width // Pourrait être réutilisé si width de certains systèmes différents
     this.type   = 'systeme'
+    this.data.type = 'systeme'
   }
 
+
+  /**
+   * Les données qui seront enregistrées
+   * 
+   */
+  get dataForRecord(){
+    var dfr = super.dataForRecord
+    return dfr
+  }
+
+  get domId(){return this._domid || (this._domid = `systeme-${this.index}`)}
   get isSysteme(){return true}
   
   /**
@@ -82,7 +94,7 @@ class Systeme extends AObjet {
   }
 
   buildAndSetImage(){
-    let img = DCreate('IMG', {id: this.id})
+    let img = DCreate('IMG', {id: this.domId})
     img.src = `systemes/systeme-${this.index}.jpg`
     img.draggable = false // supprimer ghost-image quand on move
     img.className = 'aobj systeme' // aobj = objet d'analyse
@@ -90,7 +102,6 @@ class Systeme extends AObjet {
     img.style.width = px(Pref.systeme_width)
     return img
   }
-  get id(){return this._id || (this._id = `systeme-${this.index}`)}
 
   /**
    * Observation du système

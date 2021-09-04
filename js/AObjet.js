@@ -13,10 +13,12 @@
 class AObjet {
 
   static add(objet){
-    this.items || (this.items = [])
     this.items.push(objet)
   }
 
+  static init(){
+    this.items = []
+  }
   /**
    * 
    * Pour détruire la sélection courante
@@ -86,6 +88,21 @@ class AObjet {
     this._top   = data.top
     this._left  = data.left
     AObjet.add(this)
+  }
+
+  get dataForRecord(){
+    var dfr = {}
+    if ( this.obj ) {
+      Object.assign(dfr, {
+          domId:  this.domId
+        , width:  this.obj.offsetWidth
+        , height: this.obj.offsetHeight
+        , top:    this.obj.offsetTop
+        , left:   this.obj.offsetLeft
+        , type:   this.type
+      })
+    }
+    return dfr // on ajoute le reste dans chaque sous classe
   }
 
   destroy(){
