@@ -95,7 +95,7 @@ class UIClass {
   onDoubleClick(e){
 
     // On crée un nouvel élément
-    AMarque.createNew.call(AMarque, e)
+    AMark.createNew.call(AMark, e)
 
     return stopEvent(e)
   }

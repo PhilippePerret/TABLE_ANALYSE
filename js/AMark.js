@@ -2,7 +2,7 @@
 
 
 
-class AMarque extends AObjet {
+class AMark extends AObjet {
 
   /**
    * Pour créer un nouvel objet à l'endroit du double-clic
@@ -36,7 +36,7 @@ class AMarque extends AObjet {
 
       // console.log("Je vais créer la marque avec les données : ", params)
       Object.assign(params, {id: AObjet.items.length + 1})
-      const newMark = new AMarque(params)
+      const newMark = new AMark(params)
       newMark.setValues(params)
       newMark.build_and_observe()
       newMark.toggleSelect(null)
@@ -125,7 +125,7 @@ destroy(){
 
 /**
  * Définition des valeurs à la création de la marque
- * Elles sont envoyées depuis la méthode AMarque.createNew()
+ * Elles sont envoyées depuis la méthode AMark.createNew()
  */
 setValues(values){
   this.content  = values.content
@@ -191,8 +191,6 @@ onChooseTypeCadence(cadenceType){
   this.cadenceType = cadenceType
   // On marque la cadence
   this.marquerCadence()
-  // On recorde la donnée
-  Record.ON && Record.add(`amark::set_cadence_type::${this.id}::${cadenceType}`)
 }
 get getterCadenceType(){
   return this._gettertypecad||(this._gettertypecad = this.buildGetterTypeCadence())

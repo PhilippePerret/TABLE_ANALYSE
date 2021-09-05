@@ -49,14 +49,6 @@ class RecordClass {
   }
 
   /**
-   * Pour ajouter l'opération op (alias de 'save')
-   */
-  add(op){
-    return // coupe circuit
-    return this.save(op)
-  }
-
-  /**
    * Enregistrement de l'écran actuel
    * 
    *  - On passe en revue tous les objets présents,
@@ -67,6 +59,8 @@ class RecordClass {
    */
   save(){
     var eListe = []
+    var key, io ;
+
     AObjet.items.forEach(e => {
       console.log("e:", e.data)
       if ( DGet(`#${e.domId}`) ) {
@@ -79,12 +73,20 @@ class RecordClass {
 
     this.prefix = 'photo'
 
+    //
+    // Enregistrement des préférences
+    //
+    PreferencesAppData.forEach(dp => {
+      key = `${this.prefix}-pref-${dp.id}`
+      this.set(key, Pref[dp.id])
+    })
+
     // 
     // Nombre d'objets enregistrées pour ce préfixe et nombre
     // d'objets à sauver
     //
     const nombreObjetsSaved = this.get(`${this.prefix}-nombre-objets-saved`, 0)
-    const nombreObjectCourants = eListe.length
+    const nombreObjetsCourants = eListe.length
 
     //
     // Classement des objets
@@ -94,15 +96,23 @@ class RecordClass {
     //
     // Enregistrement des objets
     //
-    for (var io = 0; io < nombreObjectCourants; ++ io) {
+    for (io = 0; io < nombreObjetsCourants; ++ io) {
       this.set(`${this.prefix}-objet-${io}`, JSON.stringify(eListe[io]))
     }
+
+    // 
+    // Enregistrement du nombre d'objets
+    // 
+    this.set(`${this.prefix}-nombre_objets`, nombreObjetsCourants)
 
     //
     // Destruction des objets qui "dépassent" (if any)
     // 
-    if ( nombreObjetsSaved > nombreObjectCourants ) {
-      // TODO
+    if ( nombreObjetsSaved > nombreObjetsCourants ) {
+      for (io = nombreObjetsCourants; io < nombreObjetsSaved; ++ io){
+        key = `${this.prefix}-objet-${io}`
+        this.remove(key)
+      }
     }
   }
 
@@ -119,95 +129,106 @@ class RecordClass {
   /**
    * Méthode qui fait le contraire d'enregistrer les opération, qui
    * les lit et, donc, reproduit les mêmes opération
-   *
-   * Opérations
-   * ----------
-   *  Déplacement d'un système
-   *        'systeme::move::<index système>::<nouveau top>' 
-   *  Replacement de tous les systèmes sous 
-   *        'systeme::move_all_under::<id système>::<data déplacement>' // cf. Systeme.toggleMoving
-   *  Création d'une marque d'analyse
-   *        'amark::create::[[<données>]]'
-   *  Enregistrement du contenu d'une marque d'analyse
-   *        'amark::set_value::<id amark>::[[<nouvelle valeur>]]'
    * 
    */
   read(prefix){
-    if ( undefined == prefix ) return this.choosePrefix()
-    this.nombreOperations = Number(this.get(`${this.prefix}-nombre_operations`))
-    this.iope = 0 ;
-    this.readTimer = setInterval(this.readNextOperation.bind(this), 1 * 1000)
-    this.readNextOperation() // la première tout de suite  
+    var io, key ;
+
+    prefix && (this.prefix = prefix )
+
+    this.prefix = 'photo'
+
+    if ( undefined == this.prefix ) return this.choosePrefix()
+    
+    // 
+    // Relecture et application des préférences
+    // 
+    this.readPreferences()
+    
+    //
+    // Nombre d'objets
+    //
+    const nombreObjetsCourants = Number(this.get(`${this.prefix}-nombre_objets`))
+    console.log("Nombre d'objets à lire", nombreObjetsCourants)
+
+    //
+    // Boucle pour récupérer chaque objet
+    //
+    this.dataObjets = [] // pour mettre les données de tous les objets 
+    for ( io = 0; io < nombreObjetsCourants ; ++ io) {
+      key = `${this.prefix}-objet-${io}`
+      this.dataObjets.push(JSON.parse(this.get(key)))
+    }
+    console.log("Tous les objets à lire :", this.dataObjets)
+
+    // Vitesse en fonctionne des préférences
+    // 100 doit donner 0 et 0 doit donner 5 secondes
+    var speed = (100 - Pref.vitesse_relecture) / 20
+    console.log("speed lecture", speed)
+    this.readTimer = setInterval(this.readNextObjet.bind(this), speed * 1000)
+    this.readNextObjet() // le premier tout de suite  
   }
-  readNextOperation(){
-    ++ this.iope
-    if ( this.iope > this.nombreOperations) {
+
+  readNextObjet(){
+    var dataObjet = this.dataObjets.shift()
+    if ( dataObjet ) {
+      //
+      // ON traite cet objet
+      //
+      if ( dataObjet.type == 'systeme' ) {
+        this.readSysteme(dataObjet)
+      } else {
+        this.readObjet(dataObjet)
+      }
+    } else {
+      //
+      // Tous les objets ont été traités
+      // 
       clearInterval(this.readTimer)
       this.readTimer = null
-    } else {
-      var key = `${this.prefix}-operation-${this.iope}`
-      var ope = this.get(key)
-      console.log("Opération '%s' : ", key, ope)
-      this.traiteOperation(ope)
     }
   }
-
-  traiteOperation(ope){
-    const dope      = ope.split('::')
-    const firstKey  = dope.shift()
-    const action    = dope.shift()
-    switch(firstKey){
-      case 'pref':
-        // => Réglage d'une préférence
-        return this.actionOnPreference(action,dope)
-      case 'systeme':
-        // => réglage d'un système
-        return this.actionOnSysteme(action, dope)
-      case 'amark':
-        // => réglage d'une marque d'analyse
-        return this.actionOnAMarque(action, dope)
-    }
-  }
-
-  actionOnPreference(action, dope){
-
-  }
-  actionOnSysteme(action, dope){
-    console.log("-> actionOnSysteme('%s', '%s')", action, dope)
-    const index   = dope.shift() // le plus fréquemment
-    const systeme = Systeme.all[Number(index) - 1]
-    const value   = dope.shift() // le plus fréquemment
-    switch(action){
-      case 'move':
-        console.log("Je dois déplacer le système à %i", Number(value), systeme)
-        systeme.top = Number(value)
-        break
-      case 'move_all_under':
-        AObjet.moveAllUnder(JSON.parse(value))
-        break
-    }
-  }
-  actionOnAMarque(action, dope){
-
-  }
-
 
   /**
-   * Pour enregistrer les préférences actuelles
+   * Lecture (création) de l'objet de données +data+
    * 
    */
-  recordPreferences(){
-    Object.keys(Preferences.data).forEach(key => {
-      this.save(`pref::${key}::${Pref[key]}`)
+  readObjet(data){
+    console.log("Je traite la lecture de l'objet : ", data)
+    const o = new AMark(data)
+    o.setValues(data)
+    o.build_and_observe()
+  }
+
+  /**
+   * Lecture des systèmes enregistrés
+   * Ça consiste simplement à les positionner, car contrairement
+   * à la lecture d'objets, les systèmes sont placés au chargement
+   * de la page.
+   * 
+   **/
+  readSysteme(data){
+    console.log("Je traite la lecture du système : ", data)
+    const o = DGet(`#${data.domId}`)
+    console.log("Système top mis à %i ", data.top, o)
+    o.style.top = px(data.top)
+  }
+
+  /**
+   * On remet les préférences ajoutées
+   * 
+   **/
+  readPreferences(){
+    var keyr, key ;
+    PreferencesAppData.forEach(dp => {
+      keyr  = `${this.prefix}::${dp.id}` // clé pour l'enregistrement 
+      key   = `pref::${dp.id}` // clé pour le programme
+      this.set(key, this.get(keyr))
     })
+    delete Preferences._data
+    Preferences.init()
   }
-  /**
-   * Pour enregistrer un changement en cours d'analyse
-   * 
-   */
-  preference(k, v){
-    this.save(`pref::${k}::${v}`)
-  }
+
 
   /**
    * Pour l'enregistrement des préfixes
@@ -256,6 +277,7 @@ class RecordClass {
    */
   get(key, defaut){ return this.stockage.getItem(key) || defaut }
   set(key,value){this.stockage.setItem(key,value)}
+  remove(key){this.stockage.removeItem(key)}
 
 
   get stockage(){

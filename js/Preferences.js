@@ -4,16 +4,27 @@
   NE DOIT PAS ÊTRE COPIÉ (CHERCHER UN AUTRE MODULE)
   Car ce module-ci comporte des appels propres à Record.
 
-  Version 1.2.0
+  Version 1.3.0
   -------------
 
+# 1.3.0
+  
+  - Mise automatique des valeurs dans Pref grâce à l'ajout de la 
+  propriété 'type' qui définit le type de la valeur de la pref, entre
+  'number', 'boolean', 'float' et 'string'
+  - Ajout de la méthode setPrefExactValues() pour mettre automatique-
+  ment les valeurs dans Pref
+
 # 1.2.0
+  
   Mise des valeurs par défaut dans les données des préférences de
   l'application, ce qui semble tout de même le plus logique.
 
 # 1.1.0
+  
   Isolation complète du module, avec la méthode de définition des
   valeur par défaut dans le module propre à l'application.
+
 */
 
 class PreferencesClass {
@@ -21,6 +32,38 @@ class PreferencesClass {
 init(){
   this.data // pour l'instancier
   this.insertStylesInHead()
+}
+
+/**
+ * Méthode qui met dans Pref toutes les valeurs avec leur bon type.
+ * Par exemple, s'il existe la propriété maLongeur, de typeV 'float'
+ * alors Pref.maLongueur sera égale à cette valeur exacte (donc un
+ * flottant)
+ * 
+ * Les valeurs non typées ne sont pas traitées (régression).
+ * 
+ */
+setPrefExactValues(){
+  if ( undefined == typeof Pref ) return
+  var stringValue, exactValue ;
+  PreferencesAppData.forEach(dp => {
+    if ( dp.type ) {
+      stringValue = this.data[dp.id]
+      switch(dp.typeV){
+        case 'number':
+          exactValue = Number(stringValue); break
+        case 'float':
+          exactValue = parseFloat(stringValue); break
+        case 'boolean':
+          exactValue = stringValue == '1'
+        case 'string':
+          exactValue = stringValue; break
+        default: 
+          exactValue = stringValue
+      }
+      Object.assign(Pref, {[dp.id]: exactValue})
+    }
+  })
 }
 
 toggle(){
@@ -62,8 +105,12 @@ show(){
  */
 insertStylesInHead(){
   const my = this
-  this.stylesTagInHead = DCreate('STYLE',{type:'text/css', text: this.buildSelectorsInHead()})
-  document.head.appendChild(this.stylesTagInHead)
+  if ( this.stylesTagInHead ) {
+    this.updateStylesInHead()
+  } else {
+    this.stylesTagInHead = DCreate('STYLE',{type:'text/css', text: this.buildSelectorsInHead()})
+    document.head.appendChild(this.stylesTagInHead)
+  }
 }
 /**
  * Méthode pour actualiser les préférences dans les selectors de
@@ -95,7 +142,7 @@ build(){
   const DA = this.data
 
   if ( 'undefined' == typeof PreferencesAppData) {
-    erreur("Il faut définir la constant 'PreferencesAppData' définissant les données de préférences")
+    erreur("Il faut définir la constante 'PreferencesAppData' définissant les données de préférences")
   } else {
     PreferencesAppData.forEach( dp => {
       if ( dp.type == 'inputtext'){
@@ -122,7 +169,7 @@ observe(){
 saveData(key, val){
   if ( 'function' == typeof val ) val = val.call()
   this.data[key] = val
-  localStorage.setItem(key, val)
+  localStorage.setItem(`pref::${key}`, val)
   if ( this.appPrefData[key].selector ) { this.updateStylesInHead() }
 }
 
@@ -131,7 +178,7 @@ getData(){
   const nombreData = s.length
   let data = {}
   for(var i = 0; i < nombreData; ++i){
-    var key = s.key(i)
+    var [rien, key] = s.key(i).split('::')
     var val = s.getItem(key)
     Object.assign(data, {[key]: val})
   }
@@ -248,6 +295,9 @@ const Preferences = new PreferencesClass()
 //    const Pref = Preferences.data
 // Note : ne pas le mettre ici, car le fichier Preferences_AppData.js
 // n'est pas encore chargé et ça plantera.
+
+
+
 
 /**
  * Méthodes DOM utiles

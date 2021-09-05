@@ -13,6 +13,9 @@
 
 ## FONCTIONNALITÉS
 
+  * [Préférences] Ajouter le traitement de la propriété 'précision' qui permet de préciser
+    des choses sur la préférence
+    
   * Sauver la partition analysée de façon différente
     - "scanner" une première fois la page en enregistrant tous les éléments dans l'ordre
     - aux scans suivants, relever les modifications, les ajouts et les suppressions

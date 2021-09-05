@@ -133,10 +133,8 @@ class Systeme extends AObjet {
       // 
       const initTop = this.top
       this.top = e.clientY - this.rectTop
-      Record.ON && Record.add(`systeme::move::${this.index}::${this.top}`)
       this.obj.classList.remove('selected')
       const dataMoveAll = {top:initTop, offset:this.top - initTop, sauf:this.id}
-      Record.ON && Record.add(`systeme::move_all_under::${this.id}::${JSON.stringify(dataMoveAll)}`)
       AObjet.moveAllUnder(dataMoveAll)
 
     } else {
