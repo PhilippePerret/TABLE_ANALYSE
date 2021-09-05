@@ -67,7 +67,7 @@ class RecordClass {
         console.log("L'objet #%s existe encore, avec les données", e.domId, e.dataForRecord)
         eListe.push(e.dataForRecord)
       } else {
-        console.log("L'object n'existe plus")
+        console.log("L'objet n'existe plus")
       }
     })
 
@@ -78,7 +78,7 @@ class RecordClass {
     //
     PreferencesAppData.forEach(dp => {
       key = `${this.prefix}-pref-${dp.id}`
-      this.set(key, Pref[dp.id])
+      this.set(key, Preferences.data[dp.id])
     })
 
     // 
@@ -122,7 +122,7 @@ class RecordClass {
    * De gauche à droite et de haut en bas
    */
   objetSorting(a, b){
-    return (a.top < (b.top - TOLERANCE_Y) || (nearY(a.top, b.top) && a.left < b.left)) ? 1 : -1
+    return (a.top < (b.top - TOLERANCE_Y) || (nearY(a.top, b.top) && a.left < b.left)) ? -1 : 1
   }
 
 
@@ -155,15 +155,28 @@ class RecordClass {
     // Boucle pour récupérer chaque objet
     //
     this.dataObjets = [] // pour mettre les données de tous les objets 
+    var dataSystemes = []
     for ( io = 0; io < nombreObjetsCourants ; ++ io) {
       key = `${this.prefix}-objet-${io}`
-      this.dataObjets.push(JSON.parse(this.get(key)))
+      var dobj = JSON.parse(this.get(key))
+      if ( dobj.type == 'systeme' ) {
+        dataSystemes.push(dobj)
+      } else {
+        this.dataObjets.push(dobj)
+      }
     }
     console.log("Tous les objets à lire :", this.dataObjets)
+
+    //
+    // Placement de tous les systèmes
+    //
+    var dsys ;
+    while ( dsys = dataSystemes.pop() ){ this.readSysteme(dsys) }
 
     // Vitesse en fonctionne des préférences
     // 100 doit donner 0 et 0 doit donner 5 secondes
     var speed = (100 - Pref.vitesse_relecture) / 20
+    console.log("Vitesse de lecture en préférences : ", Pref.vitesse_relecture)
     console.log("speed lecture", speed)
     this.readTimer = setInterval(this.readNextObjet.bind(this), speed * 1000)
     this.readNextObjet() // le premier tout de suite  
@@ -175,11 +188,7 @@ class RecordClass {
       //
       // ON traite cet objet
       //
-      if ( dataObjet.type == 'systeme' ) {
-        this.readSysteme(dataObjet)
-      } else {
-        this.readObjet(dataObjet)
-      }
+      this.readObjet(dataObjet)
     } else {
       //
       // Tous les objets ont été traités
@@ -208,9 +217,7 @@ class RecordClass {
    * 
    **/
   readSysteme(data){
-    console.log("Je traite la lecture du système : ", data)
     const o = DGet(`#${data.domId}`)
-    console.log("Système top mis à %i ", data.top, o)
     o.style.top = px(data.top)
   }
 
@@ -221,7 +228,7 @@ class RecordClass {
   readPreferences(){
     var keyr, key ;
     PreferencesAppData.forEach(dp => {
-      keyr  = `${this.prefix}::${dp.id}` // clé pour l'enregistrement 
+      keyr  = `${this.prefix}-pref-${dp.id}` // clé pour l'enregistrement 
       key   = `pref::${dp.id}` // clé pour le programme
       this.set(key, this.get(keyr))
     })

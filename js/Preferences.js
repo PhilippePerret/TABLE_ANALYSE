@@ -44,26 +44,29 @@ init(){
  * 
  */
 setPrefExactValues(){
-  if ( undefined == typeof Pref ) return
+  if ( 'undefined' == typeof Pref ) return
+  PreferencesAppData.forEach(dp => this.setPrefExactValue(dp.id, dp.typeV))
+}
+
+setPrefExactValue(key, typeV){
+  typeV || (typeV = this.appPrefData[key].typeV)
   var stringValue, exactValue ;
-  PreferencesAppData.forEach(dp => {
-    if ( dp.type ) {
-      stringValue = this.data[dp.id]
-      switch(dp.typeV){
-        case 'number':
-          exactValue = Number(stringValue); break
-        case 'float':
-          exactValue = parseFloat(stringValue); break
-        case 'boolean':
-          exactValue = stringValue == '1'
-        case 'string':
-          exactValue = stringValue; break
-        default: 
-          exactValue = stringValue
-      }
-      Object.assign(Pref, {[dp.id]: exactValue})
+  if ( typeV ) {
+    stringValue = this.data[key]
+    switch(typeV){
+      case 'number':
+        exactValue = Number(stringValue); break
+      case 'float':
+        exactValue = parseFloat(stringValue); break
+      case 'boolean':
+        exactValue = stringValue == '1'
+      case 'string':
+        exactValue = stringValue; break
+      default: 
+        exactValue = stringValue
     }
-  })
+    Object.assign(Pref, {[key]: exactValue})
+  }
 }
 
 toggle(){
@@ -165,12 +168,17 @@ observe(){
   $(this.obj).draggable()
   listen(this.obj, 'dblclick', e => {return stopEvent(e)})
 }
-
+ 
 saveData(key, val){
   if ( 'function' == typeof val ) val = val.call()
-  this.data[key] = val
-  localStorage.setItem(`pref::${key}`, val)
-  if ( this.appPrefData[key].selector ) { this.updateStylesInHead() }
+  if ( undefined == val) {
+    erreur("La préférence '"+key+"' n'a pas de valeur définie…")
+  } else {
+    this.data[key] = val
+    localStorage.setItem(`pref::${key}`, val)
+    this.setPrefExactValue(key)
+    if ( this.appPrefData[key].selector ) { this.updateStylesInHead() }
+  }
 }
 
 getData(){

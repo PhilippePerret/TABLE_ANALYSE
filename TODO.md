@@ -1,14 +1,11 @@
 ## BUGS MAJEURS
 
-  * [BUG] Proportionner la taille du rond de pédale à la font-size des préférences pour les marques
-    - ça joue sur la taille de la marque mettre un pourcentage de la taille choisie (80 % pour le moment)
-    - ça joue sur le width/heigth du span.content contenant le chiffre
+  * [BUG] Quand on édite une marque, son contenu ne se modifie pas…
   * [BUG] Proportionner le top de div.mtype (pour cadence pour le moment) en fonction de la taille de la
     font d'harmonie (donc de cadence) — je crois qu'il faut mettre 14 ou 16 de plus
 
 ## BUG MINEURS
 
-  * [BUG] Tenir compte d'un maximum de préférences à leur modification (vérifier à la fermeture des préférences).
   * [BUG] Quand on lance/arrête l'enregistrement par MAJ-R, il faut aussi "toggler" le bouton du footer
 
 ## FONCTIONNALITÉS
@@ -16,11 +13,6 @@
   * [Préférences] Ajouter le traitement de la propriété 'précision' qui permet de préciser
     des choses sur la préférence
     
-  * Sauver la partition analysée de façon différente
-    - "scanner" une première fois la page en enregistrant tous les éléments dans l'ordre
-    - aux scans suivants, relever les modifications, les ajouts et les suppressions
-  * À la lecture, toujours classer les éléments de gauche à droite et de haut en bas 
-  
   * [PhilHarmonieFont] Pouvoir écrire les notes en minuscule (peut-être ALT + note)
     la = æ, si = ß, do = ©, ré = ∂, mi = ê, fa = ƒ, sol = ﬁ
 

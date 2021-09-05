@@ -44,7 +44,7 @@ class Editeur {
   show(position, message){
     this.init()
     position && this.positionne(position)
-    message  && (this.titre = v)
+    message  && (this.titre = message)
     this.obj.classList.remove('hidden')
     this.textField.focus()
     this.textField.select()
