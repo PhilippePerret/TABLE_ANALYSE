@@ -10,6 +10,12 @@
 
 ## FONCTIONNALITÉS
 
+  * [Édition] Dans le getter de type de marque, pouvoir utiliser les raccourcis clavier pour chosir les types
+    cela permet de passer directement au clavier
+    -> Documenter
+  * [Lecture] Enregistrer les préfixes
+  * [Lecture] Utiliser GetterInList pour demander quel préfixes utiliser pour la lecture
+    -> Documenter
   * [Préférences] Ajouter le traitement de la propriété 'précision' qui permet de préciser
     des choses sur la préférence
     

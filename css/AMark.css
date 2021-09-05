@@ -20,7 +20,7 @@ div.amark div.ligne_prolong {
   display: inline-block;
   width: 200px;
   border-top: 3px solid #222;
-  margin-left: 1em;
+  margin-left: 0.3em;
   padding-bottom: 14px; /* pour être bien au milieu verticalement */
   overflow: hidden;
 }
