@@ -148,8 +148,13 @@ setValues(values){
  * 
  */
 setValue(newvalue){
+  // console.log("-> setValue('%s')", newvalue)
   const hasProlong = newvalue.endsWith('--')
-  const content = hasProlong ? newvalue.substring(0, newvalue.length - 2) : newvalue
+  
+  /**
+   * Re-définition du contenu
+   */
+  this.content = hasProlong ? newvalue.substring(0, newvalue.length - 2) : newvalue
 
   /**
    * 

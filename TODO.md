@@ -1,6 +1,5 @@
 ## BUGS MAJEURS
 
-  * [BUG] Quand on édite une marque, son contenu ne se modifie pas…
   * [BUG] Proportionner le top de div.mtype (pour cadence pour le moment) en fonction de la taille de la
     font d'harmonie (donc de cadence) — je crois qu'il faut mettre 14 ou 16 de plus
 
