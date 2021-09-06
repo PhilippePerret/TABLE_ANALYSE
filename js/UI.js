@@ -67,17 +67,9 @@ class UIClass {
     // listen(this.tableAnalyse, 'click', (e)=>{/*console.log("Un clic sur la table d'analyse.")*/})
 
     listen(this.btnLockStaves, 'click', this.toggleLockStaves.bind(this))
-    listen(this.btnRecording, 'click', this.toggleRecording.bind(this))
+    listen(this.btnRecording, 'click', Record.save.bind(Record))
   }
 
-
-  /**
-   * Activer/désactiver l'enregistrement
-   */
-  toggleRecording(){
-    Record.toggle()
-    this.btnRecording.classList[Record.ON?'add':'remove']('pressed')
-  }
   /**
    * Pour verrouiller et déverrouiller le déplacement des systèmes
    */

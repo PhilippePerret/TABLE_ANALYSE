@@ -13,41 +13,6 @@ function nearY(y1, y2){
 
 class RecordClass {
 
-  get ON(){return this.isRecording === true}
-
-  /**
-   * Pour "basculer" l'enregistrement
-   * 
-   */
-  toggle(){
-    if (this.isRecording) this.stop()
-    else this.save() // on sauve TODO lancer une boucle d'enregistrement
-    // else this.start()
-  }
-
-  /**
-   * Pour lancer l'enregistrement
-   * 
-   */
-  start(){
-    this.isRecording = true
-    if ( this.prefix ) {
-      this.setActif()
-    } else {
-      this.askForPrefix()
-      this.ioperation = 0
-    }
-  }
-
-  /**
-   * Pour arrêter l'enregistrement
-   * 
-   */
-  stop(){
-    this.unsetActif()
-    this.isRecording = false
-  }
-
   /**
    * Enregistrement de l'écran actuel
    * 
@@ -57,7 +22,7 @@ class RecordClass {
    *  - on les enregistre dans le stockage
    * 
    */
-  save(){
+  async save(){
     var eListe = []
     var key, io ;
 
@@ -71,7 +36,9 @@ class RecordClass {
       }
     })
 
-    this.prefix = 'photo'
+    await this.askForPrefix();
+
+    console.log("Préfixe pour l'enregistrement : ", this.prefix)
 
     //
     // Enregistrement des préférences
@@ -114,6 +81,7 @@ class RecordClass {
         this.remove(key)
       }
     }
+
   }
 
   /**
@@ -131,15 +99,11 @@ class RecordClass {
    * les lit et, donc, reproduit les mêmes opération
    * 
    */
-  read(prefix){
+  async read(){
     var io, key ;
 
-    prefix && (this.prefix = prefix )
+    await this.choosePrefix()
 
-    this.prefix = 'photo'
-
-    if ( undefined == this.prefix ) return this.choosePrefix()
-    
     // 
     // Relecture et application des préférences
     // 
@@ -242,8 +206,8 @@ class RecordClass {
    * 
    */
   consignePrefix(prefix){
-    var prefixes = this.stockage.getItem('prefixes') || ""
-    prefixes = prefixes.split('::')
+    var prefixes = this.getPrefixes()
+    if ( prefixes.includes(prefix) ) return ;
     prefixes.push(prefix)
     this.stockage.setItem('prefixes', prefixes.join('::'))
   }
@@ -254,26 +218,9 @@ class RecordClass {
    * 
    */
   setActif(){
-    this.redLight || this.buildRedLight()
-    this.faitClignoterRedLight()
   }
   unsetActif(){
     this.redLight.classList.add('hidden')
-  }
-  buildRedLight(){
-    const o = DCreate('SPAN', {text:'🔴', style:'position:fixed;top:1em;left:1em;', class:'hidden'})
-    document.body.appendChild(o)
-    this.redLight = o
-  }
-
-  faitClignoterRedLight(){
-    var itime = 0
-    let redtimer = setInterval(() => {
-      ++itime
-      this.redLight.classList[itime % 2 == 1 ? 'add':'remove']('hidden')
-      if (itime > 5){clearInterval(redtimer);redtimer = null}
-    }, 300)
-    this.redLight.classList.remove('hidden')
   }
 
 
@@ -299,19 +246,19 @@ class RecordClass {
    * 
    */
   askForPrefix(){
-    const ed = this.editor
-    ed.titre = "Préfixe (titre) de l'enregistrement"
-    ed.setMethod = this.setPrefix.bind(this)
-    ed.setFont('Arial', '16pt')
-    ed.positionne({top:'4em', left:'15em', fixed:true})
-    ed.value = "PRÉFIXE"
-    ed.show()
+    return new Promise((ok,ko) => {
+      this.getterPrefix || this.buildGetterPrefix()
+      this.getterPrefix.data.onChooseMethod = this.setPrefix.bind(this, ok)
+      this.getterPrefix.show({top:'4em', left:'15em', fixed:true, newEnable:true})
+    })
   }
-  setPrefix(prefix){
+  /**
+   * Méthode de retour du choix du préfixe
+   */
+  setPrefix(ok, prefix){
     this.prefix = prefix
     this.consignePrefix(prefix)
-    this.recordPreferences()
-    this.setActif() // On peut commencer
+    ok()
   }
 
   /**
@@ -319,17 +266,46 @@ class RecordClass {
    * 
    */
   choosePrefix(){
-    const ed = this.editor
-    ed.titre = "Préfixe de l'enregistrement à lire "
-    ed.setFont('Arial', '16pt')
-    ed.positionne({top:'4em', left:'15em', fixed:true})
-    ed.setMethod = this.setPrefixToRead.bind(this)
-    ed.value = "VALUE"
-    ed.show()
+    return new Promise((ok,ko) => {
+      this.getterPrefix || this.buildGetterPrefix()
+      this.getterPrefix.updateItems(this.getPrefixesAsItems())
+      this.getterPrefix.data.onChooseMethod = this.setPrefixToRead.bind(this, ok)
+      this.getterPrefix.show({newEnable:false})
+    })
   }
-  setPrefixToRead(prefix){
+  /**
+   * Méthode qui reçoit le préfix choisi pour la lecture
+   */
+  setPrefixToRead(ok, prefix){
     this.prefix = prefix 
-    this.read(true)
+    ok()
+  }
+
+  buildGetterPrefix(){
+    const prefixes = this.getPrefixesAsItems()
+    this.getterPrefix = new GetterInList({
+        items: prefixes
+      , message: "Enregistrement à utiliser"
+      , onChooseMethod: this.setPrefixToRead.bind(this)
+    }) 
+  }
+
+  /**
+   * Retourne la liste {Array} des préfixes pour GetterInList
+   * 
+   */
+  getPrefixesAsItems(){
+    let prefixes = this.getPrefixes()
+    return prefixes.map(p => {return {name:p, value:p}})
+  }
+  /**
+   * Retourne la liste {Array} de tous les préfixes enregistrés
+   * 
+   */
+  getPrefixes(){
+    let pfs = this.get('prefixes')
+    if ( ! pfs ) return [] 
+    else return pfs.split('::')
   }
 
 
