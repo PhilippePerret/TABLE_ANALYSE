@@ -52,10 +52,19 @@ Pédale         : commencer la ligne par 'PED:' ('PED:5')
     , procedure: ["Sélectionner la marque d'analyse", "activer la poignée de la ligne", "déplacer la poignée pour définir la longueur", "cliquer à nouveau sur la poignée pour finir."]
     , precision: "(rappel : pour ajouter cette ligne de prolongation, il faut terminer le nom par '--', par exemple 'dm--' pour “RÉ mineur + ligne prolongation”."
   }
+
+, {
+      operation: "Changer le type de la marque"
+    , procedure: ["Détruire la marque actuelle,", "créer une nouvelle marque du type voulu."]
+  }
 , {
       operation: 'Enregistrement de l’analyse'
-    , procedure: ["Activer l'enregistrement en jouant le raccourci ⇧R,", "arrêter l'enregistrement avec le même raccourci."]
+    , procedure: ["Prendre une photo de l'état actuel en jouant le raccourci ⇧R ou cliquer sur l'appareil photo dans le pied de page."]
     , precision: "L'enregistrement permet de consigner toutes les opérations constructives dans le stockage local afin de pouvoir reconstruire rapidement l'état d'une partition."
+  }
+, {
+      operation: 'Retrouver un état précédent d’analyse'
+    , procedure: ['Si nécessaire, régler dans les préférences la vitesse de lecture,', 'jouer le bouton “Lire” du pied de page', 'choisir l’enregistrement voulu.']
   }
 
 ]

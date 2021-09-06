@@ -147,7 +147,7 @@ class UIClass {
   // Le picto pour verrouiller les systèmes
   get btnLockStaves(){return this._btnlockstaves || (this._btnlockstaves = DGet('footer #cb_staves_lock'))}
   // Le picto pour activer l'enregistrement
-  get btnRecording(){return this._btnrecord || (this._btnrecord = DGet('footer img#cb_recording'))}
+  get btnRecording(){return this._btnrecord || (this._btnrecord = DGet('footer #cb_recording'))}
 
   get panneauStave(){
     return this._stavepanel || (this._stavepanel = DGet('iframe#staves2'))
