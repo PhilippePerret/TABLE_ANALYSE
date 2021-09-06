@@ -29,6 +29,10 @@ ul.getter_in_list li:hover {
   background-color: #25aeff;
   color: white;
 }
+ul.getter_in_list li span.shortcut {
+  float:  right;
+  color: #777;
+}
 
 /* Pour le champ "nouveau" */
 div.container_getter_in_list input.gil_new_item {

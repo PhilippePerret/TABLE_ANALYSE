@@ -1,4 +1,4 @@
-window.onkeypress = function(e){
+function onKeypressByDefault(e){
 
   switch(e.key){
 
@@ -22,8 +22,9 @@ window.onkeypress = function(e){
 
       console.log("e.key = '%s'", e.key)
   }
-
 }
+window.onkeypress = onKeypressByDefault
+
 
 window.onkeydown = function(e){
   // console.log("[KEY DOWN] e.key = '%s'", e.key)

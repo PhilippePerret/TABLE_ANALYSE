@@ -18,22 +18,22 @@
  * 
  */
 const CADENCES = {
-    'par': {name:'Cadence parfaite',   value:'par', autocontent:'I'}
-  , 'imp': {name:'Cadence imparfaite', value:'imp', autocontent:'I'}
-  , 'dem': {name:'Demi-cadence',       value:'dem', autocontent:'V'}
-  , 'ita': {name:'Cadence italienne',  value:'ita', autocontent:'I'}
-  , 'rom': {name:'Cadence rompue',     value:'rom', autocontent:'VI'}
-  , 'pla': {name:'Cadence plagale',    value:'pla', autocontent:'I'}
-  , 'fau': {name:'Cadence fauréenne',  value:'fau', autocontent:'I'}
+    'par': {name:'Cadence parfaite',   value:'par', autocontent:'I',  shortcut:'p'}
+  , 'imp': {name:'Cadence imparfaite', value:'imp', autocontent:'I',  shortcut:'n'}
+  , 'dem': {name:'Demi-cadence',       value:'dem', autocontent:'V',  shortcut:'d'}
+  , 'ita': {name:'Cadence italienne',  value:'ita', autocontent:'I',  shortcut:'i'}
+  , 'rom': {name:'Cadence rompue',     value:'rom', autocontent:'VI', shortcut:'r'}
+  , 'pla': {name:'Cadence plagale',    value:'pla', autocontent:'I',  shortcut:'g'}
+  , 'fau': {name:'Cadence fauréenne',  value:'fau', autocontent:'I',  shortcut:'f'}
 }
 
 const TYPES_NOTES = {
-    'np': {name:'Note de passage',  value:'np', autocontent:'NP'}
-  , 're': {name:'Retard',           value:'re', autocontent:'R'}
-  , 'br': {name:'Broderie',         value:'br', autocontent:'BR'}
-  , 'db': {name:'Double-broderie',  value:'db', autocontent:'DBR'}
-  , 'in': {name:'Note naturelle',   value:'in', autocontent:'NN'}
-  , 'an': {name:'Anacrouse',        value:'an', autocontent:'ANA'}
+    'np': {name:'Note de passage',  value:'np', autocontent:'NP',   shortcut:'p'}
+  , 're': {name:'Retard',           value:'re', autocontent:'R',    shortcut:'r'}
+  , 'br': {name:'Broderie',         value:'br', autocontent:'BR',   shortcut:'b'}
+  , 'db': {name:'Double-broderie',  value:'db', autocontent:'DBR',  shortcut:'d'}
+  , 'in': {name:'Note naturelle',   value:'in', autocontent:'NN',   shortcut:'n'}
+  , 'an': {name:'Anacrouse',        value:'an', autocontent:'ANA',  shortcut:'a'}
 }
 
 /**
@@ -45,17 +45,17 @@ const TYPES_NOTES = {
  * 
  */
 const AMARQUES_TYPES = {
-    'acc': {name:'Accord',        ajustX:12,  ajustY:8,     value:'acc', default:'c', message:"Nom de l'accord"}
-  , 'har': {name:'Harmonie',      ajustX:16,  ajustY:8,     value:'har', default:'I', message:"Chiffrage"}
-  , 'mod': {name:'Modulation',    ajustX:24,  ajustY:-80,   value:'mod', default:'c', message:"Nouvelle tonalité"}
-  , 'emp': {name:'Emprunt',       ajustX:4,   ajustY:-60,   value:'emp', default:'c', message:"Tonalité de l'emprunt"}
-  , 'cad': {name:'Cadence…',      ajustX:-70, ajustY:14,    value:'cad', subtype:true, autocontent:true}
-  , 'ped': {name:'Pédale',        ajustX:20,  ajustY:10,    value:'ped', default:'1', message:"Degré de la pédale"}
-  , 'txt': {name:'Texte',         ajustX:0,   ajustY:23,    value:'txt', subtype:true, default:'',  message:"Texte à afficher"}
-  , 'seg': {name:'Segment',       value:'seg', subtype:true, default:'membre 1', message:"Légende (vide si aucune)"}
-  , 'not': {name:'Type de note…', value:'not', subtype:true, autocontent:true}
-  , 'cir': {name:'Cercle',        value:'cir'}
-  , 'box': {name:'cadre',         value:'box'}
+    'acc': {name:'Accord',        shortcut:'a', ajustX:12,  ajustY:8,     value:'acc', default:'c', message:"Nom de l'accord"}
+  , 'har': {name:'Harmonie',      shortcut:'h', ajustX:16,  ajustY:8,     value:'har', default:'I', message:"Chiffrage"}
+  , 'mod': {name:'Modulation',    shortcut:'m', ajustX:24,  ajustY:-80,   value:'mod', default:'c', message:"Nouvelle tonalité"}
+  , 'emp': {name:'Emprunt',       shortcut:'e', ajustX:4,   ajustY:-60,   value:'emp', default:'c', message:"Tonalité de l'emprunt"}
+  , 'cad': {name:'Cadence…',      shortcut:'c', ajustX:-70, ajustY:14,    value:'cad', subtype:true, autocontent:true}
+  , 'ped': {name:'Pédale',        shortcut:'p', ajustX:20,  ajustY:10,    value:'ped', default:'1', message:"Degré de la pédale"}
+  , 'txt': {name:'Texte',         shortcut:'t', ajustX:0,   ajustY:23,    value:'txt', subtype:true, default:'',  message:"Texte à afficher"}
+  , 'seg': {name:'Segment',       shortcut:'s', value:'seg', subtype:true, default:'membre 1', message:"Légende (vide si aucune)"}
+  , 'not': {name:'Type de note…', shortcut:'n', value:'not', subtype:true, autocontent:true}
+  , 'cir': {name:'Cercle',        shortcut:'r', value:'cir'}
+  , 'box': {name:'cadre',         shortcut:'b', value:'box'}
 }
 
 // Liste des types (ci-dessus) qui doivent utiliser la 

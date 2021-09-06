@@ -4,14 +4,14 @@
  * ------------------
  * Pour choisir facilement dans une liste
  * 
- * Version 1.0.1
+ * Version 1.1.0
  * -------------
  * 
  * @usage
  * 
  *    const gil = new GetterInList({
  *        items:[
- *          {name:"nom", value:'value'}
+ *          {name:"nom", value:'value', shortcut:'[modifier]lettre'}
  *        ]}
  *      , multiple: false/true
  *      , message: "le titre message"
@@ -24,6 +24,10 @@
  * 
  * 
 
+  # 1.1.0
+
+    * Ajout de la possibilité d'utiliser des raccourcis clavier
+    * 
   # 1.0.1
     Correction du bug sur le positionnement de la liste
 
@@ -84,6 +88,21 @@ class GetterInList {
   }
 
   /**
+   * Méthode appelée quand on clique sur une touche (hors du champ
+   * de saisie d'un nouvel item)
+   */
+  onKeyPressForShortcuts(e){
+    console.log("-> onKeyPressForShortcuts('%s')", e.key)
+    console.log("this.shortcuts", this.shortcuts)
+    if ( this.shortcuts[e.key] ){
+      window.onkeypress = onKeypressByDefault
+      this.data.onChooseMethod.call(null, this.shortcuts[e.key])
+      this.hide()
+    }
+    return stopEvent(e)
+  }
+
+  /**
    * Pour actualiser la liste des items
    *
    */
@@ -94,13 +113,23 @@ class GetterInList {
 
   /**
    * Construction des items pour choix
+   * 
+   * La méthode définit aussi la relation entre le raccourci clavier
+   * et l'item de menu, le cas échéant.
+   * 
    */
   buildItems(menu){
     menu = menu || DGet('.getter_in_list', this.obj)
     menu.innerHTML = ''
     var imenu = 0
+    this.shortcuts = {}
     this.data.items.forEach(di => {
-      const m = DCreate('LI', {index: imenu, text:di.name, value:di.value})
+      var lab = di.name
+      di.shortcut && (lab = `<span class="shortcut">${di.shortcut}</span> ${lab}`)
+      const m = DCreate('LI', {index: imenu, text:lab, value:di.value})
+      if ( di.shortcut ) {
+        Object.assign(this.shortcuts, {[di.shortcut]: di.value})
+      }
       menu.appendChild(m)
       listen(m, 'click', this.onClickItem.bind(this, imenu))
       ++ imenu
@@ -136,10 +165,12 @@ class GetterInList {
     listen(this.newItemField,'keypress', e => {
       if ( e.key == 'Enter'){
         my.onSetNew.call(my)
-        return stopEvent(e)
+        return stopEvent(e) // dans TOUS les cas
       }
     })
-
+    console.log("Placement de l'observer de touches")
+    // listen(this.obj, 'keypress', this.onKeyPressForShortcuts.bind(this))
+    window.onkeypress = this.onKeyPressForShortcuts.bind(this)
   }
 
   get newItemField(){
