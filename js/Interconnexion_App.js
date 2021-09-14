@@ -12,7 +12,7 @@ class InterconnexionWithStaves {
     switch(data.operation){
       case 'PLAY':
         // console.log("Je dois jouer : ", data.note)
-        Piano.play(data.note.note, data.note.octave, {duration: 1})
+        Piano.play(data.note.note, data.note.octave, {duration: 1.5})
         break
       case 'activateTableAnalyse':
         UI.panneauStave.classList.add('hidden')

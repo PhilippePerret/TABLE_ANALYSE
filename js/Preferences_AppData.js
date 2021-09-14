@@ -18,6 +18,7 @@ const PreferencesAppData = [
   , {type:'inputtext', typeV:'number', id:'marque_texte_size_3',    default:30,   label:"Taille des petits textes", unite:'px', selector:'div.amark.txt.size3 span.content', selector_value:'font-size:__VALUE__px;'}
   , {type:'inputtext', typeV:'float',  id:'note_volume',            default:0.5,  label:"Volume de départ des notes (entre 0.0 — silence – et 1.0 — volume max."}
   , {type:'inputtext', typeV:'number', id:'vitesse_relecture',      default:20,  label:"Vitesse de la relecture (de 1 à 100)", precision:"Ça détermine le temps d'affichage d'un objet en mode relecture. Avec la valeur 100, tous les objets sont à peu près ré-écrit en même temps."}
+  , {type:'inputtext', typeV:'number', id:'minimum_duree_notes',    default:0.5,      label:"Durée minimum des notes jouées (secondes)", precision:"Même si une note est “piquée” sur le clavier, elle sera jouée ce temps."}
 ]
 
 const Pref = Preferences.data

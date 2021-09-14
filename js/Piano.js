@@ -31,9 +31,22 @@ class PianoClass {
     // console.log("Je dois couper '%s%s' ", note, octave)
     const at = this.tagsNotes[note+octave]
     if (at) {
-      at.pause()
-      at.currentTime = 0
+      var rest = 0
+      if ( at.currentTime < Pref.minimum_duree_notes ) {
+        rest = Pref.minimum_duree_notes - at.currentTime
+        // console.log("Il reste ce nombre de secondes à jouer : ", rest)
+      }
+      this.timerStopNote = setTimeout(this.proceedStopNote.bind(this, at), rest * 1000)
     }
+  }
+  /**
+   * Procède véritablement à l'arrêt de la note +at+
+   */
+  proceedStopNote(at){
+    at.pause()
+    at.currentTime = 0
+    clearTimeout(this.timerStopNote)
+    this.timerStopNote = null
   }
 
   /**
