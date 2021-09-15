@@ -145,14 +145,18 @@ get rectifTopPerType(){
  * Méthode pour obtenir le type de la marque
  */
 getAMarkType(){
-  this.getterOfAMarkType.show(this.position)
+  var params = {cancelEnable: true}
+  Object.assign(params, this.position)
+  this.getterOfAMarkType.show(params)
   this._datatype      = null
   this._gettersubtype = null
   this._editorcontent = null
 }
 onChooseType(type){
-  this._amark_type = type
-  this.proceed()
+  if ( type ) {
+    this._amark_type = type
+    this.proceed()
+  }
 }
 /**
  * Méthode pour obtenir le sous-type de la marque

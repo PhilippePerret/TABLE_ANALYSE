@@ -17,6 +17,7 @@
  *      , message: "le titre message"
  *      , onChooseMethod: <methode à appeler>)
  *      , newEnable: false/true // pour en créer un 
+ *      , cancelEnable: Ajout d'un menu 'Renoncer'
  * 
  *    Et ensuite :
  * 
@@ -52,12 +53,15 @@ class GetterInList {
     if (params.top) this.obj.style.top = px(params.top)
     if (params.left) this.obj.style.left = px(params.left)
     var method = params.newEnable ? 'remove' : 'add'
-    console.log("method:", method)
+    //console.log("method:", method)
     this.newItemField.classList[method]('hidden')
+    var methodVisu = params.cancelEnable ? 'remove' : 'add'
+    this.cancelItem.classList[methodVisu]('hidden')
     this.obj.classList.remove('hidden')
-
   }
   hide(){
+    window.onkeypress = onKeypressByDefault
+    window.onkeyup    = functionOnKeyUp
     this.obj.classList.add('hidden')
   }
 
@@ -95,11 +99,22 @@ class GetterInList {
     console.log("-> onKeyPressForShortcuts('%s')", e.key)
     console.log("this.shortcuts", this.shortcuts)
     if ( this.shortcuts[e.key] ){
-      window.onkeypress = onKeypressByDefault
       this.data.onChooseMethod.call(null, this.shortcuts[e.key])
       this.hide()
     }
     return stopEvent(e)
+  }
+  /**
+   * Méthode d'observation de la touche soulevée
+   * pour savoir si l'utilisateur a pressé la touche
+   * escape
+   */
+  onKeyUpForCancel(e){
+    if ( e.key == 'Escape' ) {
+      this.data.onChooseMethod.call(null, null)
+      this.hide()
+      return stopEvent(e)
+    }
   }
 
   /**
@@ -123,15 +138,21 @@ class GetterInList {
     menu.innerHTML = ''
     var imenu = 0
     this.shortcuts = {}
-    this.data.items.forEach(di => {
+    const items = this.data.items
+    items.push({name:'Renoncer',shortcut:'Escape', value:null})
+    items.forEach(di => {
       var lab = di.name
       di.shortcut && (lab = `<span class="shortcut">${di.shortcut}</span> ${lab}`)
-      const m = DCreate('LI', {index: imenu, text:lab, value:di.value})
+      const m = DCreate('LI', {index: imenu, text:lab, value:di.value||''})
       if ( di.shortcut ) {
         Object.assign(this.shortcuts, {[di.shortcut]: di.value})
       }
       menu.appendChild(m)
       listen(m, 'click', this.onClickItem.bind(this, imenu))
+      // Pour pouvoir masquer l'item si cancelEnable n'est pas vrai
+      if ( di.name == 'Renoncer' ) {
+        this.cancelItem = m
+      }
       ++ imenu
     })
   }
@@ -171,6 +192,7 @@ class GetterInList {
     console.log("Placement de l'observer de touches")
     // listen(this.obj, 'keypress', this.onKeyPressForShortcuts.bind(this))
     window.onkeypress = this.onKeyPressForShortcuts.bind(this)
+    window.onkeyup    = this.onKeyUpForCancel.bind(this)
   }
 
   get newItemField(){
