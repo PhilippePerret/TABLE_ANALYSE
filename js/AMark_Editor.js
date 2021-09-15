@@ -173,15 +173,24 @@ getAMarkContent(){
   this.editorOfAMarkContent.value = this.amark_content || this.defaultValue
   this.editorOfAMarkContent.show(this.position)
 }
+
+/**
+ * Méthode de retour du contenu (Editeur.js)
+ * 
+ * @param {String|Null} content Le contenu ou la valeur null si Renoncer
+ * 
+ */
 onSetContent(content){
-  this.hasProlong = content.endsWith('--')
-  this._amark_content = this.hasProlong 
-    ? content.substring(0, content.length - 2) 
-    : content
-  // On met toujours une prolongation à une pédale, même lorsqu'elle
-  // n'est pas indiquée
-  if ( this.amark_type == 'ped' ) this.hasProlong = true
-  this.proceed()
+  if ( content ) {
+    this.hasProlong = content.endsWith('--')
+    this._amark_content = this.hasProlong 
+      ? content.substring(0, content.length - 2) 
+      : content
+    // On met toujours une prolongation à une pédale, même lorsqu'elle
+    // n'est pas indiquée
+    if ( this.amark_type == 'ped' ) this.hasProlong = true
+    this.proceed()
+  }
 }
 
 /**

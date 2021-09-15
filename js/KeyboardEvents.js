@@ -7,9 +7,11 @@ function onKeypressByDefault(e){
       return stopEvent(e)
 
     case 'M':
+      console.log("Je dois ouvrir le manuel")
       Manuel.toggle.call(Manuel);break
 
     case 'P':
+      console.log("Je dois ouvrir les préférences")
       Preferences.toggle.call(Preferences);break
 
     case 'R':
