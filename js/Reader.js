@@ -57,9 +57,51 @@ async read(){
  */
 setAMarques(){
   console.log("Relecture des marques d'analyse…")
-  const marques = this.getAObjets()
-  marques.forEach(dmark => this.drawAMarque(dmark))
+  this.marques = this.getAObjets()
+  if ( Pref.vitesse_relecture == 100 ) {
+    console.log("Affichage instantanné des marques")
+    this.marques.forEach(dmark => this.drawAMarque(dmark))
+  } else {
+    console.log("Affichage temporisé des marques")
+    this.calcFrequenceLecture()
+    this.afficheNextMarque()
+  }
   console.log("= Marques appliquées avec succès =")
+}
+
+/**
+ * Calcul de la fréquence de lecture
+ * 
+ * Rappel : 0 = vitesse la plus lente, 99 = vitesse la plus élevée
+ * 
+ * 0  donnera 5000 (5 secondes entre chaque marque)
+ * 99 donnera 50   (1 centième de secondes entre chaque marque)
+ * 
+ */
+calcFrequenceLecture(){
+   this.frequenceLecture = (100 - Pref.vitesse_relecture) * 50
+}
+
+/**
+ * Affichage de la prochaine marque si elle existe
+ * 
+ */
+afficheNextMarque(){
+  if ( this.timerMarque ) {
+    clearTimeout(this.timerMarque)
+    this.timerMarque = null
+  }
+  const marque = this.marques.shift()
+  if ( marque ) {
+    this.drawAMarque(marque)
+    this.timerMarque = setTimeout(this.afficheNextMarque.bind(this), this.frequenceLecture)
+  } else {
+    this.setFinLecture()
+  }
+}
+
+setFinLecture(){
+  console.log("Fin de la lecture")
 }
 
 /**
@@ -71,6 +113,7 @@ drawAMarque(data){
   const o = new AMark(data)
   o.setValues(data)
   o.build_and_observe()
+  // TODO Scroller pour voir la marque
 }
 
 /**
@@ -80,6 +123,7 @@ drawAMarque(data){
 setSystemes(){
   console.log("Positionnement des systèmes…")
   const systemes = this.getSystemes()
+  console.log("Données des systèmes : ", systemes)
   systemes.forEach(dsys => this.setSysteme(dsys))
   console.log("= Systèmes positionnés =")
 }
