@@ -106,8 +106,12 @@ class RecorderClass {
     //
     // On doit produire une table (liste) contenant :
     //  - les systèmes classés, leur top et leur bottom
-    this.systemes = Systeme.all.map(sys => {
-      return {index: sys.index, top:sys.top, bottom:sys.bottom, aobjets:[]}
+    // Note : on ne prend que les systèmes qui existent dans la page
+    this.systemes = []
+    Systeme.all.forEach(sys => {
+      if ( DGet(`#${sys.domId}`) ) {
+        this.systemes.push({index: sys.index, top:sys.top, bottom:sys.bottom, aobjets:[]})
+      }
     })
     this.set(`${this.prefix}-systemes`, JSON.stringify(this.systemes))
     console.log("= Systèmes enregistrés =")
@@ -165,7 +169,7 @@ class RecorderClass {
 
       const leSysteme = this.getSystemeAssocieA(aobj)
       console.log("Le système trouvé pour la marque : ", leSysteme)
-      
+
       //
       // On associe la marque au système
       //
@@ -251,113 +255,6 @@ class RecorderClass {
    */
   objetSorting(a, b){
     return a.left < b.left ? -1 : 1
-  }
-
-
-  /**
-   * Méthode qui fait le contraire d'enregistrer les opération, qui
-   * les lit et, donc, reproduit les mêmes opération
-   * 
-   */
-  async read(){
-    var io, key ;
-
-    await this.choosePrefix()
-
-    // 
-    // Relecture et application des préférences
-    // 
-    this.readPreferences()
-    
-    //
-    // Nombre d'objets
-    //
-    const nombreObjetsCourants = Number(this.get(`${this.prefix}-nombre_objets`))
-    console.log("Nombre d'objets à lire", nombreObjetsCourants)
-
-    //
-    // Boucle pour récupérer chaque objet
-    //
-    this.dataObjets = [] // pour mettre les données de tous les objets 
-    var dataSystemes = []
-    for ( io = 0; io < nombreObjetsCourants ; ++ io) {
-      key = `${this.prefix}-objet-${io}`
-      var dobj = JSON.parse(this.get(key))
-      if ( dobj.type == 'systeme' ) {
-        dataSystemes.push(dobj)
-      } else {
-        this.dataObjets.push(dobj)
-      }
-    }
-    console.log("Tous les objets à lire :", this.dataObjets)
-
-    //
-    // Placement de tous les systèmes
-    //
-    var dsys ;
-    while ( dsys = dataSystemes.pop() ){ this.readSysteme(dsys) }
-
-    // Vitesse en fonctionne des préférences
-    // 100 doit donner 0 et 0 doit donner 5 secondes
-    var speed = (100 - Pref.vitesse_relecture) / 20
-    console.log("Vitesse de lecture en préférences : ", Pref.vitesse_relecture)
-    console.log("speed lecture", speed)
-    this.readTimer = setInterval(this.readNextObjet.bind(this), speed * 1000)
-    this.readNextObjet() // le premier tout de suite  
-  }
-
-  readNextObjet(){
-    var dataObjet = this.dataObjets.shift()
-    if ( dataObjet ) {
-      //
-      // ON traite cet objet
-      //
-      this.readObjet(dataObjet)
-    } else {
-      //
-      // Tous les objets ont été traités
-      // 
-      clearInterval(this.readTimer)
-      this.readTimer = null
-    }
-  }
-
-  /**
-   * Lecture (création) de l'objet de données +data+
-   * 
-   */
-  readObjet(data){
-    console.log("Je traite la lecture de l'objet : ", data)
-    const o = new AMark(data)
-    o.setValues(data)
-    o.build_and_observe()
-  }
-
-  /**
-   * Lecture des systèmes enregistrés
-   * Ça consiste simplement à les positionner, car contrairement
-   * à la lecture d'objets, les systèmes sont placés au chargement
-   * de la page.
-   * 
-   **/
-  readSysteme(data){
-    const o = DGet(`#${data.domId}`)
-    o.style.top = px(data.top)
-  }
-
-  /**
-   * On remet les préférences ajoutées
-   * 
-   **/
-  readPreferences(){
-    var keyr, key ;
-    PreferencesAppData.forEach(dp => {
-      keyr  = `${this.prefix}-pref-${dp.id}` // clé pour l'enregistrement 
-      key   = `pref::${dp.id}` // clé pour le programme
-      this.set(key, this.get(keyr))
-    })
-    delete Preferences._data
-    Preferences.init()
   }
 
 
