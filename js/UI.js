@@ -67,7 +67,7 @@ class UIClass {
     // listen(this.tableAnalyse, 'click', (e)=>{/*console.log("Un clic sur la table d'analyse.")*/})
 
     listen(this.btnLockStaves, 'click', this.toggleLockStaves.bind(this))
-    listen(this.btnRecording, 'click', Record.save.bind(Record))
+    listen(this.btnRecording, 'click', Recorder.save.bind(Recorder))
   }
 
   /**

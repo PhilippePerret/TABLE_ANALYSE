@@ -87,6 +87,6 @@ const ManuelShortcutsData = [
 , {
       operation:  'Lancer l’enregistrement'
     , shortcut:   '⇧R'
-    , precision:  '“R” comme “Record”. Rappel : l’enregistrement consiste à enregistrer toutes les actions constructives dans le stockage local.' 
+    , precision:  '“R” comme “Recorder”. Rappel : l’enregistrement consiste à enregistrer toutes les actions constructives dans le stockage local.' 
   }
 ]

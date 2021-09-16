@@ -15,7 +15,7 @@ function onKeypressByDefault(e){
       Preferences.toggle.call(Preferences);break
 
     case 'R':
-      Record.toggle.call(Record);break
+      Recorder.toggle.call(Recorder);break
 
     case 'S':
       UI.toggleStaves();break;

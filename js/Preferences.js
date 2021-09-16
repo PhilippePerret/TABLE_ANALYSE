@@ -1,9 +1,6 @@
 'use strict';
 /*
 
-  NE DOIT PAS ÊTRE COPIÉ (CHERCHER UN AUTRE MODULE)
-  Car ce module-ci comporte des appels propres à Record.
-
   Version 1.3.0
   -------------
 

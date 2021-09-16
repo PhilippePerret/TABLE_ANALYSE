@@ -44,7 +44,6 @@ class AObjet {
     })
     this.items = newItems
     aobjet.destroy()
-    Record.ON && Record.save(`destroy-aobjet-${aobjet.id}`)
   }
 
 
@@ -116,6 +115,8 @@ class AObjet {
   get height(){return this._height || (this._height = this.obj.offsetHeight)}
   get top(){return this._top || (this._top = this.obj.offsetTop)}
   set top(v){this._top = v; this.obj && (this.obj.style.top = px(v))}
+
+  get bottom(){ return this.top + this.height }
 
   get left(){return this._left || (this._left = this.obj.offsetLeft)}
   set left(v){this._left = v; this.obj && (this.obj.style.left = px(v))}
