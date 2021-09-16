@@ -130,7 +130,7 @@ class RecorderClass {
     this.associerObjetsEtSystemes()
 
     // La liste qui va contenir tous les objets
-    oListe = []
+    var oListe = []
 
     //
     // On boucle sur chaque système (ils sont dans l'ordre)
@@ -163,8 +163,9 @@ class RecorderClass {
       if ( ! DGet(`#${aobj.domId}`) ) return ; 
       console.log("Traiter l'objet :", aobj.dataForRecord)
 
-      const leSysteme = getSystemeAssocieA(aobj)
-
+      const leSysteme = this.getSystemeAssocieA(aobj)
+      console.log("Le système trouvé pour la marque : ", leSysteme)
+      
       //
       // On associe la marque au système
       //
@@ -187,7 +188,6 @@ class RecorderClass {
     // En fonction du type de l'élément, on prend un
     // système ou l'autre
     //
-    var leSysteme = null
     switch(aobj.type){
       // Les types qui sont toujours au-dessus
       case 'acc': case 'mod': case 'emp': return sysEnDessous
@@ -212,7 +212,10 @@ class RecorderClass {
         } 
         // Dans tous les autres cas, la marque est associé au 
         // système inférieur.
-        else return sysEnDessous ;
+        else {
+          if ( sysEnDessous ) return sysEnDessous
+          else return sysAuDessus
+        }
     }// switch aobjet.type
   }
 
@@ -229,7 +232,7 @@ class RecorderClass {
         sysAuDessus = sys
       }
       // La fin
-      if ( sys.top > bottom ) {
+      if ( sys.top > top ) {
         sysEnDessous = sys
         break
       }
@@ -405,20 +408,25 @@ class RecorderClass {
   askForPrefix(){
     return new Promise((ok,ko) => {
       this.getterPrefix || this.buildGetterPrefix()
-      this.getterPrefix.data.onChooseMethod = this.setPrefix.bind(this, ok)
+      this.getterPrefix.data.onChooseMethod = this.setPrefix.bind(this, ok, ko)
       this.getterPrefix.show({top:'4em', left:'15em', fixed:true, newEnable:true})
     })
   }
   /**
    * Méthode de retour du choix du préfixe
    */
-  setPrefix(ok, prefix){
-    this.prefix = prefix
-    this.consignePrefix(prefix)
-    ok()
+  setPrefix(ok, ko, prefix){
+    console.log("ok, ko, prefix = ", ok, ko, prefix)
+    if ( prefix ) {
+      this.prefix = prefix
+      this.consignePrefix(prefix)
+      ok()
+    } else {
+      erreur("Sans préfixe, je ne peux pas enregistrer")
+    }
   }
 
-  /**
+  /** BACH
    * Méthode permettant de choisir un préfixe déjà enregistré
    * 
    */
