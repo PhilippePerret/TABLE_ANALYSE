@@ -59,11 +59,42 @@ class GetterInList {
     this.cancelItem.classList[methodVisu]('hidden')
     this.obj.classList.remove('hidden')
   }
+
+  /**
+   * Fermer le getter
+   * 
+   * Une des erreurs ici avait été de remettre les observeurs de 
+   * touche sur la fenêtre (window.onkeypress et window.onkeyup). Le
+   * problème est que cette méthode hide() peut arriver APRÈS qu'une
+   * autre méthode a été appelée et a défini ses propres observeurs.
+   * Ils seraient alors détruits et remplacés ici.
+   * Donc il faut absolument remettre les anciens observeurs avant
+   * l'appel de cette autre méthode.
+   */
   hide(){
-    window.onkeypress = onKeypressByDefault
-    window.onkeyup    = functionOnKeyUp
+    console.log("-> GetterInList #hide")
     this.obj.classList.add('hidden')
   }
+
+  /**
+   * Méthode générale qui reçoit la valeur choisie dans la liste 
+   * (+value+) et l'envoie à la méthode définie par le propriétaire 
+   * pour la réception.
+   * En plus, cette méthode remet les observeurs de touche de window
+   * et ferme la liste
+   */
+  callChooseMethodWithValueAndHide(value){
+    this.resetWindowObservers()
+    this.data.onChooseMethod.call(null, value)
+    this.hide()
+  }
+
+  resetWindowObservers(){
+    console.log("-> GetterInList #resetWindowObservers")
+    window.onkeypress = this.curOnKeyPress
+    window.onkeyup    = this.curOnKeyUp
+  }
+
 
   /**
    * Appelée quand on choisit une valeur
@@ -75,8 +106,7 @@ class GetterInList {
   onClickItem(imenu, e){
     const value = this.data.items[imenu].value
     // Pour le moment, pas de traitement de plusieurs valeurs
-    this.data.onChooseMethod.call(null, value)
-    this.hide()
+    this.callChooseMethodWithValueAndHide(value)
     return stopEvent(e)
   }
   /**
@@ -87,8 +117,7 @@ class GetterInList {
    */
   onSetNew(){
     const value = this.newItemField.value.trim()
-    this.data.onChooseMethod.call(null, value)
-    this.hide()
+    this.callChooseMethodWithValueAndHide(value)
   }
 
   /**
@@ -99,8 +128,7 @@ class GetterInList {
     console.log("-> onKeyPressForShortcuts('%s')", e.key)
     console.log("this.shortcuts", this.shortcuts)
     if ( this.shortcuts[e.key] ){
-      this.data.onChooseMethod.call(null, this.shortcuts[e.key])
-      this.hide()
+      this.callChooseMethodWithValueAndHide(this.shortcuts[e.key])
     }
     return stopEvent(e)
   }
@@ -111,8 +139,7 @@ class GetterInList {
    */
   onKeyUpForCancel(e){
     if ( e.key == 'Escape' ) {
-      this.data.onChooseMethod.call(null, null)
-      this.hide()
+      this.callChooseMethodWithValueAndHide(null)
       return stopEvent(e)
     }
   }
@@ -191,6 +218,8 @@ class GetterInList {
     })
     console.log("Placement de l'observer de touches")
     // listen(this.obj, 'keypress', this.onKeyPressForShortcuts.bind(this))
+    this.curOnKeyPress = window.onkeypress
+    this.curOnKeyUp    = window.onkeyup
     window.onkeypress = this.onKeyPressForShortcuts.bind(this)
     window.onkeyup    = this.onKeyUpForCancel.bind(this)
   }
