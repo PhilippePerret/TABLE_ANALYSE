@@ -266,7 +266,7 @@ class RecorderClass {
     var prefixes = this.getPrefixes()
     if ( prefixes.includes(prefix) ) return ;
     prefixes.push(prefix)
-    this.stockage.setItem('prefixes', prefixes.join('::'))
+    this.setPrefixes(prefixes)
   }
 
   /**
@@ -343,13 +343,25 @@ class RecorderClass {
     ok()
   }
 
-  buildGetterPrefix(){
+  buildGetterPrefix(msg = "Enregistrement à utiliser"){
     const prefixes = this.getPrefixesAsItems()
     this.getterPrefix = new GetterInList({
         items: prefixes
-      , message: "Enregistrement à utiliser"
+      , message:        msg
       , onChooseMethod: this.setPrefixToRead.bind(this)
+      , removeMethod:   this.removeRecord.bind(this)
     }) 
+  }
+
+  /**
+   * Méthode appelée par le getter in list pour détruire un
+   * enregistrement
+   */
+  removeRecord(li){
+    const prefix = li.getAttribute('value')
+    var newPrefixes = []
+    this.getPrefixes().forEach(p => { p == prefix || newPrefixes.push(p) })
+    this.setPrefixes(newPrefixes)
   }
 
   /**
@@ -370,6 +382,9 @@ class RecorderClass {
     else return pfs.split('::')
   }
 
+  setPrefixes(prefixes){
+    this.stockage.setItem('prefixes', prefixes.join('::'))
+  }
 
   get editor(){return this._editor || (this._editor = this.getEditor())}
 

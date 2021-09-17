@@ -4,7 +4,7 @@
  * ------------------
  * Pour choisir facilement dans une liste
  * 
- * Version 1.2.1
+ * Version 1.3.0
  * -------------
  * 
  * @usage
@@ -18,12 +18,19 @@
  *      , onChooseMethod: <methode à appeler>)
  *      , newEnable: false/true // pour en créer un 
  *      , cancelEnable: Ajout d'un menu 'Renoncer'
+ *      , removeMethod: <methode à appeler pour détruire un élément>
+ *          // Si elle est définie, un bouton "-" est ajouté à chaque
+ *          // item
  * 
  *    Et ensuite :
  * 
  *    gil.show({top:..., left:..., newEnable:...})
  * 
  * 
+
+  # 1.3.0
+    * Possibilité de supprimer les items si la méthode removeMethod
+      est définie.
 
   # 1.2.1
     * Pour que la fenêtre s'affiche toujours dans la vue courante
@@ -176,19 +183,39 @@ class GetterInList {
     items.push({name:'Renoncer',shortcut:'Escape', value:null})
     items.forEach(di => {
       var lab = di.name
+      //
+      // Raccourci
+      //
       di.shortcut && (lab = `<span class="shortcut">${di.shortcut}</span> ${lab}`)
+      //
+      // Bouton pour supprimer
+      //
+      if ( this.data.removeMethod ) {
+        lab = `<span class="rem_btn">❌</span> ${lab}`
+      }
       const m = DCreate('LI', {index: imenu, text:lab, value:di.value||''})
       if ( di.shortcut ) {
         Object.assign(this.shortcuts, {[di.shortcut]: di.value})
       }
       menu.appendChild(m)
       listen(m, 'click', this.onClickItem.bind(this, imenu))
+      if ( this.data.removeMethod ) {
+        let btn_rem = m.querySelector('span.rem_btn')
+        listen(btn_rem, 'click', this.onWantRemoveItem.bind(this, m))
+      }
       // Pour pouvoir masquer l'item si cancelEnable n'est pas vrai
       if ( di.name == 'Renoncer' ) {
         this.cancelItem = m
       }
       ++ imenu
     })
+  }
+
+  onWantRemoveItem(item, e){
+    console.log("Je veux détruire l'élément :", item)
+    this.data.removeMethod.call(null, item)
+    item.remove()
+    return stopEvent(e)
   }
 
   build(){

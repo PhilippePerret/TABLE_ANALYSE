@@ -20,6 +20,16 @@ ul.getter_in_list {
   margin: 0;
 }
 
+ul.getter_in_list li span.rem_btn {
+  float: right;
+  display: inline-block;
+  font-size: 6pt;
+  width: 23px;
+  height: 16px;
+  background-color: #FEE;
+  text-align: center;
+}
+
 ul.getter_in_list li {
   margin: 0;
   border: 1px solid #DDD;
