@@ -134,6 +134,8 @@ setValues(values){
   this.subtype  = values.subtype
   this.prolong  = values.prolong
   this.type     = values.type
+  values.width  && (this.width  = values.width);
+  values.height && (this.height = values.height);
 }
 
 /**
@@ -228,6 +230,8 @@ buildGetterTypeCadence(){
     UI.tableAnalyse.appendChild(o)
     o.style.left = px(this.left)
     o.style.top  = px(this.top)
+    this.width  && (o.style.width  = px(this.width)); // relecture
+    this.height && (o.style.height = px(this.height)); // relecture
     this.obj = o
     // S'il faut une ligne de prolongation, on la construit
     this.prolong && this.buildLigneProlongation()
@@ -383,6 +387,7 @@ buildGetterTypeCadence(){
       this.handlerProlong = DCreate('DIV', {class:'handler_prolong'})
       this.obj.appendChild(this.prolongLine)
       this.obj.appendChild(this.handlerProlong)
+      this.width && (this.prolongLine.style.width = px(this.width - 15 - 10 - this.contentSpan.offsetWidth))
       listen(this.handlerProlong, 'click',      this.onClickProlongHandler.bind(this))
       listen(this.handlerProlong, 'mousemove',  this.onMoveHandlerProlong.bind(this))
     }
