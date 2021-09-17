@@ -4,7 +4,7 @@
  * ------------------
  * Pour choisir facilement dans une liste
  * 
- * Version 1.1.0
+ * Version 1.2.0
  * -------------
  * 
  * @usage
@@ -24,6 +24,10 @@
  *    gil.show({top:..., left:..., newEnable:...})
  * 
  * 
+
+  # 1.2.0
+    * Correction du bug de l'impossibilité de taper le texte quand
+      on est dans le champ "nouvelle item"
 
   # 1.1.0
 
@@ -215,6 +219,7 @@ class GetterInList {
         my.onSetNew.call(my)
         return stopEvent(e) // dans TOUS les cas
       }
+      e.stopPropagation()
     })
     console.log("Placement de l'observer de touches")
     // listen(this.obj, 'keypress', this.onKeyPressForShortcuts.bind(this))
