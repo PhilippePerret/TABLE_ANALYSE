@@ -107,11 +107,11 @@ class RecorderClass {
     // On doit produire une table (liste) contenant :
     //  - les systèmes classés, leur top et leur bottom
     // Note : on ne prend que les systèmes qui existent dans la page
-    this.systemes = []
-    Systeme.all.forEach(sys => {
-      if ( DGet(`#${sys.domId}`) ) {
-        this.systemes.push({index: sys.index, top:sys.top, bottom:sys.bottom, aobjets:[]})
-      }
+    // Pour le moment il n'est pas possible de supprimer un système
+    // dans la partition mais on peut imaginer que ce sera possible
+    // plus tard.
+    this.systemes = Systeme.realAll.map(sys => {
+      return {index: sys.index, top:sys.top, bottom:sys.bottom, aobjets:[]}
     })
     this.set(`${this.prefix}-systemes`, JSON.stringify(this.systemes))
     console.log("= Systèmes enregistrés =")

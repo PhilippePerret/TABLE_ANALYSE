@@ -28,6 +28,25 @@ class Systeme extends AObjet {
     this.all.forEach(sys => sys.unlock())
   }
 
+  /**
+   * @return {Array} La liste des systèmes existants vraiment sur la
+   * table d'analyse.
+   * Note : le tout dernier, qui n'existe pas et qui a mis fin à 
+   * l'écriture des systèmes n'est plus celui qui peut poser problème
+   * puisqu'il a été retiré de this.all. Il s'agit plutôt de systèmes
+   * qui, pour une raison ou une autre, serait supprimés de l'analyse
+   *
+   * Note : cette liste est recalculée chaque fois, il convient donc
+   * de la mettre dans une variable si elle doit servir plusieurs
+   * fois.
+   * 
+   */
+  static get realAll(){
+    var reals = []
+    this.all.forEach(sys => { DGet(`#${sys.domId}`) && reals.push(sys)})
+    return reals
+  }
+
   static writeNextSystem(isysteme, currentTop){
     const my = this
     my.all || my.init()
@@ -39,7 +58,10 @@ class Systeme extends AObjet {
       .then( _ => my.writeNextSystem(++isysteme, (sys.top + sys.height + Pref.distance_systemes)))
       .catch(err => {
         err && console.error(err)/* normal à la fin */
-        // Le dernier système (on le consigne pour pour modifier la
+        // On doit détruire la dernière instance
+        var lastNonSystem = my.all.pop()
+        lastNonSystem = null
+        // Le (vrai) dernier système (on le consigne pour modifier la
         // hauteur de la table d'analyse)
         my.last = my.all[my.all.length - 1]
         my.last.isLast = true
