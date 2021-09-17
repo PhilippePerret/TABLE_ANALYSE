@@ -4,7 +4,7 @@
  * ------------------
  * Pour choisir facilement dans une liste
  * 
- * Version 1.2.0
+ * Version 1.2.1
  * -------------
  * 
  * @usage
@@ -25,6 +25,9 @@
  * 
  * 
 
+  # 1.2.1
+    * Pour que la fenêtre s'affiche toujours dans la vue courante
+    
   # 1.2.0
     * Correction du bug de l'impossibilité de taper le texte quand
       on est dans le champ "nouvelle item"
