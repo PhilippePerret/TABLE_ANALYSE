@@ -1,9 +1,13 @@
 'use strict';
 /*
 
-  Version 1.3.0
+  Version 1.3.1
   -------------
 
+# 1.3.1
+  - Amélioration de la gestion de la récupération des préférences
+    au lancement de l'application.
+    
 # 1.3.0
   
   - Mise automatique des valeurs dans Pref grâce à l'ajout de la 
@@ -179,21 +183,40 @@ saveData(key, val){
 }
 
 getData(){
-  const s = localStorage
-  const nombreData = s.length
+  // On commence par essayer de relever les données qui sont peut-être
+  // enregistrées
   let data = {}
-  for(var i = 0; i < nombreData; ++i){
-    var [rien, key] = s.key(i).split('::')
-    var val = s.getItem(key)
-    Object.assign(data, {[key]: val})
-  }
-  // console.log("Data préférences :", data)
+  PreferencesAppData.forEach(dpref => {
+    var val = this.getValueInStorage(dpref.id)
+    if ( val ) {
+      //console.log("%s est défini, de type %s et de valeur %s", dpref.id, dpref.typeV, val)
+      switch(dpref.typeV){
+        case 'number': case 'float': val = Number(val); break;
+      }
+      Object.assign(data, {[dpref.id]: val})
+    }
+  })
+  //console.log("Data préférences récupérées :", data)
   this._data = this.defaultize(data)
   return this._data
 }
 
 /**
+ * @return {String} la valeur de la clé +key+ dans le stockage
+ * local.
+ *
+ * @param {String} key  La clé de préférence (sans le 'pref::')
+ * 
+ */
+getValueInStorage(key){
+  return localStorage.getItem(`pref::${key}`)
+}
+
+/**
  * On met les valeurs pas défaut aux valeurs non définies
+ * 
+ * +data+ correspond aux données qui sont relevées dans le stockage
+ * local.
  * 
  * On en profite pour faire la table appPrefData qui contient en clé
  * l'identifiant de la préférence et en valeur sa donnée complète 
@@ -203,7 +226,7 @@ defaultize(data){
   this.appPrefData = {}
   PreferencesAppData.forEach(dp => {
     Object.assign(this.appPrefData, {[dp.id]: dp})
-    if (undefined == data[dp.id]) Object.assign(data, {[dp.id]: dp.default})
+    if ( undefined == data[dp.id] ) Object.assign(data, {[dp.id]: dp.default})
   })
   return data
 }
