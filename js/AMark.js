@@ -43,6 +43,24 @@ class AMark extends AObjet {
     }
   }
 
+/**
+ * Nettoyage de la table d'analyse (par exemple avant lecture)
+ * 
+ */
+static cleanUp(){
+  var restItems = []
+  AObjet.items.forEach(aobj => {
+    if ( aobj.type != 'systeme' ){
+      aobj.destroy()
+      aobj = null
+    } else {
+      restItems.push(aobj)
+    }
+  })
+  AObjet.items      = restItems ; // seulement les systèmes
+  AObjet.selection  = []
+}
+
 
 constructor(data){
   super(data)
@@ -120,7 +138,7 @@ edit(){
 }
 
 destroy(){
-  this.obj.remove() // c'est tout ?
+  this.obj.remove() // c'est tout ? OUI
 }
 
 /**
@@ -211,11 +229,14 @@ buildGetterTypeCadence(){
   return getter
 }
 
-
-  build_and_observe(){
-    this.build()
-    this.observe()
-  }
+/**
+ * Construction et observation de la marque d'analyse
+ * 
+ */
+build_and_observe(){
+  this.build()
+  this.observe()
+}
 
 
   build(){
@@ -223,7 +244,6 @@ buildGetterTypeCadence(){
     css.push(this.type)
     if (TYPES_PHILHARMONIEFONT.includes(this.type)) css.push('philharm')
     if ( this.subtype ) css.push(this.subtype) 
-    console.log("css:", css)
     var o = DCreate('DIV', {id:this.domId, class:css.join(' ')})
     this.contentSpan = DCreate('SPAN', {class:'content', text:this.content})
     o.appendChild(this.contentSpan)

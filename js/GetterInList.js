@@ -86,7 +86,7 @@ class GetterInList {
    * l'appel de cette autre méthode.
    */
   hide(){
-    console.log("-> GetterInList #hide")
+    // console.log("-> GetterInList #hide")
     this.obj.classList.add('hidden')
   }
 
@@ -139,8 +139,8 @@ class GetterInList {
    * de saisie d'un nouvel item)
    */
   onKeyPressForShortcuts(e){
-    console.log("-> onKeyPressForShortcuts('%s')", e.key)
-    console.log("this.shortcuts", this.shortcuts)
+    //console.log("-> onKeyPressForShortcuts('%s')", e.key)
+    //console.log("this.shortcuts", this.shortcuts)
     if ( this.shortcuts[e.key] ){
       this.callChooseMethodWithValueAndHide(this.shortcuts[e.key])
     }
@@ -250,7 +250,7 @@ class GetterInList {
       }
       e.stopPropagation()
     })
-    console.log("Placement de l'observer de touches")
+    //console.log("Placement de l'observer de touches")
     // listen(this.obj, 'keypress', this.onKeyPressForShortcuts.bind(this))
     this.curOnKeyPress = window.onkeypress
     this.curOnKeyUp    = window.onkeyup

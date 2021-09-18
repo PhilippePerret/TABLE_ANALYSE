@@ -11,6 +11,7 @@ class ReaderClass {
 
 /**
  * = main =
+ * 
  * Méthode principale (appelée par le bouton 'Lire') pour lire ou
  * afficher l'analyse voulue
  * 
@@ -57,6 +58,7 @@ async read(){
  */
 setAMarques(){
   console.log("Relecture des marques d'analyse…")
+  AMark.cleanUp()
   this.marques = this.getAObjets()
   if ( Pref.vitesse_relecture == 100 ) {
     console.log("Affichage instantanné des marques")
