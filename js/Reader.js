@@ -123,17 +123,19 @@ drawAMarque(data){
 setSystemes(){
   console.log("Positionnement des systèmes…")
   const systemes = this.getSystemes()
-  console.log("Données des systèmes : ", systemes)
+  // console.log("Données enregistrées des systèmes : ", systemes)
   systemes.forEach(dsys => this.setSysteme(dsys))
   console.log("= Systèmes positionnés =")
 }
 /**
  * Réglage du système
+ * ------------------
+ * On passe par les instances pour qu'elles soient rectifiées
  * 
  **/
 setSysteme(data){
-  const o = DGet(`#systeme-${data.index}`)
-  o && (o.style.top = px(data.top))
+  //console.log("Positionnement de ", data)
+  Systeme.getByIndex(data.index).positionne(data.top)
 }
 
 /**

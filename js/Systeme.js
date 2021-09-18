@@ -13,6 +13,15 @@ class Systeme extends AObjet {
   }
 
   /**
+   * @return {Systeme} l'instance d'index +index+ (1-start)
+   * 
+   */
+  static getByIndex(index){
+    //console.log("this.all[index - 1] = ", this.all[index - 1], this.all)
+    return this.all[index - 1]
+  }
+
+  /**
    * Pour dessiner tous les systèmes
    * 
    */
@@ -123,6 +132,15 @@ class Systeme extends AObjet {
     img.style.top   = px(this.top)
     img.style.width = px(Pref.systeme_width)
     return img
+  }
+
+  /**
+   * Pour repositionner le système (par exemple après une lecture)
+   * 
+   */
+  positionne(top){
+    this.top = this.data.top = top
+    this.obj.style.top = px(top)
   }
 
   /**
