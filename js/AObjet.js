@@ -112,7 +112,7 @@ class AObjet {
   get id(){return this._id}
   set id(v){this._id = v}
 
-  get height(){return this._height || (this._height = this.obj.offsetHeight)}
+  get height(){return this._height || (this._height = this.obj && this.obj.offsetHeight)}
   set height(v){this._height = v}
   get top(){return this._top || (this._top = this.obj.offsetTop)}
   set top(v){this._top = v; this.obj && (this.obj.style.top = px(v))}

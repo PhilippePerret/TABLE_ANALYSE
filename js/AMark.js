@@ -231,7 +231,7 @@ buildGetterTypeCadence(){
     o.style.left = px(this.left)
     o.style.top  = px(this.top)
     this.width  && (o.style.width  = px(this.width)); // relecture
-    this.height && (o.style.height = px(this.height)); // relecture
+    this._height && (o.style.height = px(this.height)); // relecture
     this.obj = o
     // S'il faut une ligne de prolongation, on la construit
     this.prolong && this.buildLigneProlongation()
