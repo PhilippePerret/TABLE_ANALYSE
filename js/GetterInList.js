@@ -212,7 +212,6 @@ class GetterInList {
   }
 
   onWantRemoveItem(item, e){
-    console.log("Je veux détruire l'élément :", item)
     this.data.removeMethod.call(null, item)
     item.remove()
     return stopEvent(e)
