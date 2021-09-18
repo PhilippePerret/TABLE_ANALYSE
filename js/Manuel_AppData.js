@@ -48,6 +48,10 @@ Pédale         : commencer la ligne par 'PED:' ('PED:5')
 `
   }
 , {
+      operation:"Dupliquer une marque d'analyse"
+    , procedure: ["Créer l'originale si nécessaire", "presser la touche ALT", "avec la touche ALT pressée, déplacer la marque d'analyse à dupliquer à l'endroit voulu."]
+  }
+, {
       operation: "Allonger/raccourcir la ligne de prolongation"
     , procedure: ["Sélectionner la marque d'analyse", "activer la poignée de la ligne", "déplacer la poignée pour définir la longueur", "cliquer à nouveau sur la poignée pour finir."]
     , precision: "(rappel : pour ajouter cette ligne de prolongation, il faut terminer le nom par '--', par exemple 'dm--' pour “RÉ mineur + ligne prolongation”."

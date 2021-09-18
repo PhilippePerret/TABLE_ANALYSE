@@ -1,3 +1,8 @@
+# 1.2.
+  
+  * Correction de nombreux bugs
+  * Possibilité de dupliquer une marque d'analyse avec la touche ALT
+  
 # 1.1.0
 
   * Gestion isolée de la création d'une nouvelle marque

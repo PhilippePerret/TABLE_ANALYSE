@@ -11,7 +11,7 @@ class AMark extends AObjet {
    *  1) choix du type (type) de la marque (avec un GetterInList)
    *  2) contenu (value) de la marque (avec un Mini-éditeur)
    * 
-   * @param {Event}   e L'event double-click
+   * @param {Event}   e       L'event double-click (ou null)
    * @param {String}  type    Le type de la marque. Défini seulement 
    *                          après son choix
    * @param {String}  value   Valeur textuelle de l'élément
@@ -168,6 +168,7 @@ setValues(values){
  * 
  */
 setValue(newvalue){
+  if ( null == newvalue ) return ; // annulation
   // console.log("-> setValue('%s')", newvalue)
   const hasProlong = this.prolong = newvalue.endsWith('--')
   
@@ -239,25 +240,25 @@ build_and_observe(){
 }
 
 
-  build(){
-    var css = ['amark', 'aobj']
-    css.push(this.type)
-    if (TYPES_PHILHARMONIEFONT.includes(this.type)) css.push('philharm')
-    if ( this.subtype ) css.push(this.subtype) 
-    var o = DCreate('DIV', {id:this.domId, class:css.join(' ')})
-    this.contentSpan = DCreate('SPAN', {class:'content', text:this.content})
-    o.appendChild(this.contentSpan)
-    UI.tableAnalyse.appendChild(o)
-    o.style.left = px(this.left)
-    o.style.top  = px(this.top)
-    this.width  && (o.style.width  = px(this.width)); // relecture
-    this._height && (o.style.height = px(this.height)); // relecture
-    this.obj = o
-    // S'il faut une ligne de prolongation, on la construit
-    this.prolong && this.buildLigneProlongation()
-    // S'il faut un "+" de cadence, on le construit
-    this.isCadence && this.buildSignePlusCadence()
-  }
+build(){
+  var css = ['amark', 'aobj']
+  css.push(this.type)
+  if (TYPES_PHILHARMONIEFONT.includes(this.type)) css.push('philharm')
+  if ( this.subtype ) css.push(this.subtype) 
+  var o = DCreate('DIV', {id:this.domId, class:css.join(' ')})
+  this.contentSpan = DCreate('SPAN', {class:'content', text:this.content})
+  o.appendChild(this.contentSpan)
+  UI.tableAnalyse.appendChild(o)
+  o.style.left = px(this.left)
+  o.style.top  = px(this.top)
+  this.width  && (o.style.width  = px(this.width)); // relecture
+  this._height && (o.style.height = px(this.height)); // relecture
+  this.obj = o
+  // S'il faut une ligne de prolongation, on la construit
+  this.prolong && this.buildLigneProlongation()
+  // S'il faut un "+" de cadence, on le construit
+  this.isCadence && this.buildSignePlusCadence()
+}
 
 
   /**
@@ -450,25 +451,36 @@ build_and_observe(){
     }
   }
 
-  observe(){
-    const my = this;
-    listen(this.obj, 'click', this.toggleSelect.bind(this))
-    listen(this.obj, 'dblclick', this.onDoubleClick.bind(this))
-    if (['box','cir','seg'].includes(this.type) ) {
-      $(this.obj).resizable()
-    }
-    // Draggable
-    $(this.obj).draggable({
-        rien:function(){}
-      , drag:function(e, ui){
-          if ( e.shiftKey ){ ui.position.top = my.top }
-        }
-      , stop:function(e,ui){
-          my.left = ui.position.left
-          my.top  = ui.position.top
-        }
-    })
+/**
+ * Observation de la marque
+ * 
+ */
+observe(){
+  const my = this;
+  listen(this.obj, 'click', this.toggleSelect.bind(this))
+  listen(this.obj, 'dblclick', this.onDoubleClick.bind(this))
+  if (['box','cir','seg'].includes(this.type) ) {
+    $(this.obj).resizable()
   }
+  // Draggable
+  $(this.obj).draggable({
+      rien:function(){}
+    , drag:function(e, ui){
+        if ( e.shiftKey ){ ui.position.top = my.top }
+      }
+    //, helper: 'clone'
+    , start:function(e,ui){
+        if ( e.altKey ) {
+          console.log("=> duplication")
+          AMark.createNew(null, my.data)
+        }
+      }
+    , stop:function(e,ui){
+        my.left = ui.position.left
+        my.top  = ui.position.top
+      }
+  })
+}
 
   get type(){return this._type}
   set type(t){

@@ -42,7 +42,7 @@ class Editeur {
 
   // Ouvrir l'éditeur
   show(position, message){
-    console.log("-> Editeur#show")
+    // console.log("-> Editeur#show")
     this.init()
     position && this.positionne(position)
     message  && (this.titre = message)
