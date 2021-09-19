@@ -1,9 +1,13 @@
 'use strict';
 /*
 
-  Version 1.3.1
+  Version 1.3.2
   -------------
 
+# 1.3.2
+  - ajout du traitement du type boolean dans getData (la récupération
+    des préférences dans le stockage local)
+    
 # 1.3.1
   - Amélioration de la gestion de la récupération des préférences
     au lancement de l'application.
@@ -192,6 +196,7 @@ getData(){
       //console.log("%s est défini, de type %s et de valeur %s", dpref.id, dpref.typeV, val)
       switch(dpref.typeV){
         case 'number': case 'float': val = Number(val); break;
+        case 'boolean': val = val == '1' ? true : false; break;
       }
       Object.assign(data, {[dpref.id]: val})
     }
