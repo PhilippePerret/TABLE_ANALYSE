@@ -46,8 +46,6 @@ class AObjet {
     aobjet.destroy()
   }
 
-
-
   static setSelection(aobjet){
     this.deSelectAll()
     this.selection = [aobjet]

@@ -87,6 +87,11 @@ get dataForRecord(){
  * 
  */
 toggleSelect(e){
+  if ( this.justMoved ) {
+    this.justMoved = false
+    return stopEvent(e)
+  }
+  // console.log("-> toggleSelect() / this.isSelected = ", this.isSelected)
   if (this.isSelected) {
     //
     // Déselectionner l'objet
@@ -98,14 +103,17 @@ toggleSelect(e){
     //
     this.select()
   }
+  // console.log("<- toggleSelect / this.isSelected = ", this.isSelected)
   if (e) return stopEvent(e)
 }
 select(){
-  this.obj.classList.add('selected')
+  // console.log("-> select")
   AObjet.setSelection(this)
+  this.obj.classList.add('selected')
   this.isSelected = true
 }
 deselect(){
+  // console.log("-> deselect")
   this.obj.classList.remove('selected')
   this.isSelected = false
 }
@@ -258,6 +266,57 @@ build(){
   this.prolong && this.buildLigneProlongation()
   // S'il faut un "+" de cadence, on le construit
   this.isCadence && this.buildSignePlusCadence()
+}
+
+
+/**
+ * Observation de la marque
+ * 
+ */
+observe(){
+  const my = this;
+  listen(this.obj, 'click', this.toggleSelect.bind(this))
+  listen(this.obj, 'dblclick', this.onDoubleClick.bind(this))
+  if (['box','cir','seg'].includes(this.type) ) {
+    $(this.obj).resizable()
+  }
+  // Draggable
+  $(this.obj).draggable({
+      rien:function(){}
+    , drag:function(e, ui){
+        if ( e.shiftKey ){ ui.position.top = my.top }
+      }
+    //, helper: 'clone'
+    , start:function(e,ui){
+        if ( e.altKey ) {
+          AMark.createNew(null, my.data)
+        }
+      }
+    , stop:function(e,ui){
+        // console.log("-> stop")
+        my.ajustePosition(ui.position.left, ui.position.top)
+        my.select()
+        my.justMoved = true // pour empêcher le re-select
+        // console.log("<- stop")
+      }
+  })
+}
+
+/**
+ * Ajustement de la position
+ * 
+ * Pour le moment, la méthode ne sert que lorsqu'on déplace l'objet,
+ * mais à l'avenir, elle devra servir dès que les préférences d'ajus-
+ * tement seront réglées à "ajuster les hauteurs des marques de même
+ * nature"
+ * 
+ */
+ajustePosition(left, top){
+  if (Pref.adjust_same_mark) {
+    // TODO Faire le traitement
+  }
+  this.left = left
+  this.top  = top
 }
 
 
@@ -450,37 +509,6 @@ build(){
       $(this.obj).resizable("disabled")
     }
   }
-
-/**
- * Observation de la marque
- * 
- */
-observe(){
-  const my = this;
-  listen(this.obj, 'click', this.toggleSelect.bind(this))
-  listen(this.obj, 'dblclick', this.onDoubleClick.bind(this))
-  if (['box','cir','seg'].includes(this.type) ) {
-    $(this.obj).resizable()
-  }
-  // Draggable
-  $(this.obj).draggable({
-      rien:function(){}
-    , drag:function(e, ui){
-        if ( e.shiftKey ){ ui.position.top = my.top }
-      }
-    //, helper: 'clone'
-    , start:function(e,ui){
-        if ( e.altKey ) {
-          console.log("=> duplication")
-          AMark.createNew(null, my.data)
-        }
-      }
-    , stop:function(e,ui){
-        my.left = ui.position.left
-        my.top  = ui.position.top
-      }
-  })
-}
 
   get type(){return this._type}
   set type(t){
