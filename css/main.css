@@ -10,10 +10,6 @@ body {
 
 .fright {float: right}
 
-.aobj:not(.selected) {
-  border: 2px solid transparent;
-  z-index: 0;
-}
 
 iframe {
   display: block;
