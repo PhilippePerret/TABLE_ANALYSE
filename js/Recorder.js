@@ -232,7 +232,7 @@ class RecorderClass {
     this.systemesCount || (this.systemesCount = this.systemes.length)
     for(var isys = 0; isys < this.systemesCount; ++isys){
       var sys = this.systemes[isys]
-      if ( sys.bottom < top) {
+      if ( sys.top < top) {
         sysAuDessus = sys
       }
       // La fin
