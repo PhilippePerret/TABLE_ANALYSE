@@ -257,11 +257,12 @@ build(){
   this.contentSpan = DCreate('SPAN', {class:'content', text:this.content})
   o.appendChild(this.contentSpan)
   UI.tableAnalyse.appendChild(o)
-  o.style.left = px(this.left)
-  o.style.top  = px(this.top)
   this.width  && (o.style.width  = px(this.width)); // relecture
   this._height && (o.style.height = px(this.height)); // relecture
   this.obj = o
+  // o.style.left = px(this.left)
+  // o.style.top  = px(this.top)
+  this.ajustePosition(this.left, this.top)
   // S'il faut une ligne de prolongation, on la construit
   this.prolong && this.buildLigneProlongation()
   // S'il faut un "+" de cadence, on le construit
