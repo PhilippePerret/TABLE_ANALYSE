@@ -68,12 +68,13 @@ constructor(data){
   this.data   = data
   this.event  = data.event
 
-  /* Pour écrire toutes les coordonnées
+  //* Pour écrire toutes les coordonnées
   var xy = {}
   for(var k in this.event){
     if ( k.endsWith('X') || k.endsWith('Y')) Object.assign(xy, {[k]: this.event[k]})
   }
   console.log("Coordonnées du click ", xy)
+  console.log("Rappel : c'est PageX et PageY qui serviront à placer l'éditeur")
   //*/
 
 }
@@ -146,7 +147,8 @@ get rectifTopPerType(){
  */
 getAMarkType(){
   var params = {cancelEnable: true}
-  Object.assign(params, this.position)
+  Object.assign(params, this.positionFixed)
+  console.log("Paramètres envoyés à GetterInList (notamment pour le positionner)", params)
   this.getterOfAMarkType.show(params)
   this._datatype      = null
   this._gettersubtype = null
@@ -163,7 +165,7 @@ onChooseType(type){
  * (si nécessaire)
  */
 getAMarkSubType(){
-  this.getterOfAMarkSubtype.show(this.position)
+  this.getterOfAMarkSubtype.show(this.positionFixed)
 }
 onChooseSubtype(subtype){
   this._amark_subtype = subtype
@@ -239,6 +241,9 @@ get hasAutoContent(){
 get position(){
   // return this._pos || (this._pos = {top:this.event.layerY, left:this.event.layerX})
   return this._pos || (this._pos = {top:this.event.pageY - 40, left:this.event.pageX - 40})
+}
+get positionFixed(){
+  return this._posfixed || (this._posfixed = {top:this.event.clientY - 40, left:this.event.clientX - 40})
 }
 
 // La valeur par défaut, en fonction du type

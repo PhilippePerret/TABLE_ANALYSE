@@ -62,7 +62,7 @@ class GetterInList {
   }
 
   show(params){
-    // console.log("-> GetterInList.show(params)", params)
+    console.log("-> GetterInList.show(params)", params)
     params = params || {}
     if (params.top) this.obj.style.top = px(params.top)
     if (params.left) this.obj.style.left = px(params.left)
