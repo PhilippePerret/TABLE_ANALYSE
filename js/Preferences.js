@@ -1,8 +1,11 @@
 'use strict';
 /*
 
-  Version 1.3.2
+  Version 1.3.3
   -------------
+
+# 1.3.3
+  - affichage des "précisions" sur une préférence
 
 # 1.3.2
   - ajout du traitement du type boolean dans getData (la récupération
@@ -159,6 +162,10 @@ build(){
         o.appendChild(this.buildCheckBox(dp))
       } else if ( dp.type == 'pressoir' ) {
         o.appendChild(this.buildChoixPressoirs(dp))
+      }
+      // Si des précisions sont à apporter
+      if ( dp.precision ) {
+        o.appendChild(DCreate('DIV',{class:'description', text:dp.precision}))
       }
     })
   }

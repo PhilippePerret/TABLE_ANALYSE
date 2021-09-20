@@ -22,7 +22,9 @@ async read(){
   await Recorder.choosePrefix()
   this.prefix = Recorder.prefix
 
-  console.log("Préfix de l'analyse à lire : ", this.prefix)
+  this.applyPreferences = confirm("Dois-je appliquer les préférences ?")
+
+  //console.log("Préfix de l'analyse à lire : ", this.prefix)
 
   //
   // Relecture et application des métadonnées
@@ -57,18 +59,18 @@ async read(){
  * 
  */
 setAMarques(){
-  console.log("Relecture des marques d'analyse…")
+  //console.log("Relecture des marques d'analyse…")
   AMark.cleanUp()
   this.marques = this.getAObjets()
   if ( Pref.vitesse_relecture == 100 ) {
-    console.log("Affichage instantanné des marques")
+    // console.log("Affichage instantanné des marques")
     this.marques.forEach(dmark => this.drawAMarque(dmark))
   } else {
     console.log("Affichage temporisé des marques")
     this.calcFrequenceLecture()
     this.afficheNextMarque()
   }
-  console.log("= Marques appliquées avec succès =")
+  // console.log("= Marques appliquées avec succès =")
 }
 
 /**
@@ -111,7 +113,7 @@ setFinLecture(){
  * 
  */
 drawAMarque(data){
-  console.log("Je traite la lecture de l'objet : ", data)
+  // console.log("Je traite la lecture de l'objet : ", data)
   const o = new AMark(data)
   o.setValues(data)
   o.build_and_observe()
@@ -123,11 +125,11 @@ drawAMarque(data){
  * 
  */
 setSystemes(){
-  console.log("Positionnement des systèmes…")
+  // console.log("Positionnement des systèmes…")
   const systemes = this.getSystemes()
   // console.log("Données enregistrées des systèmes : ", systemes)
   systemes.forEach(dsys => this.setSysteme(dsys))
-  console.log("= Systèmes positionnés =")
+  // console.log("= Systèmes positionnés =")
 }
 /**
  * Réglage du système
@@ -145,16 +147,20 @@ setSysteme(data){
  * 
  */
 setPreferences(){
-  console.log("Application des préférences…")
-  const prefs = this.getPreferences()
-  var key ;
-  PreferencesAppData.forEach(dp => {
-    key   = `pref::${dp.id}` // clé pour le programme
-    this.set(key, prefs[dp.id])
-  })
-  delete Preferences._data
-  Preferences.init()
-  console.log("= Préférences appliquées =")
+  if ( this.applyPreferences ) {
+    // console.log("Application des préférences…")
+    const prefs = this.getPreferences()
+    var key ;
+    PreferencesAppData.forEach(dp => {
+      key   = `pref::${dp.id}` // clé pour le programme
+      this.set(key, prefs[dp.id])
+    })
+    delete Preferences._data
+    Preferences.init()
+    // console.log("= Préférences appliquées =")
+  } else {
+    // console.log("Les préférences ne sont pas appliquées.")
+  }
 }
 
 setMetadata(){

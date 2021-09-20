@@ -4,6 +4,8 @@
 section#preferences-panel {
   position: fixed;
   top: 5em;
+  max-height: 600px;
+  overflow: auto;
   left: 12em;
   background-color: #EFEFEF;
   font-family:  'Arial Narrow';
@@ -24,8 +26,9 @@ section#preferences-panel div#tip-close {
 section#preferences-panel div.div-data {
   margin-top: 1em;
 }
-section#preferences-panel div.div-data div.description {
+section#preferences-panel div.description {
   margin-left:  4em;
+  margin-top: 8px;
   font-size: 0.75em;
 }
 

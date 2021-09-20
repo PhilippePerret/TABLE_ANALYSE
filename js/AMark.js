@@ -282,7 +282,6 @@ observe(){
     $(this.obj).resizable()
   }
   // Draggable
-  console.log("this.obj rendu draggable (observé) : ", this.obj)
   $(this.obj).draggable({
       rien:function(){}
     , drag:function(e, ui){
