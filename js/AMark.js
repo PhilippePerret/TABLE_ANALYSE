@@ -274,13 +274,14 @@ build(){
  * 
  */
 observe(){
-  const my = this;
+  const my = this ;
   listen(this.obj, 'click', this.toggleSelect.bind(this))
   listen(this.obj, 'dblclick', this.onDoubleClick.bind(this))
   if (['box','cir','seg'].includes(this.type) ) {
     $(this.obj).resizable()
   }
   // Draggable
+  console.log("this.obj rendu draggable (observé) : ", this.obj)
   $(this.obj).draggable({
       rien:function(){}
     , drag:function(e, ui){
@@ -289,6 +290,7 @@ observe(){
     //, helper: 'clone'
     , start:function(e,ui){
         if ( e.altKey ) {
+          console.log("my.data pour duplication: ", my.data)
           AMark.createNew(null, my.data)
         }
       }
@@ -313,8 +315,11 @@ observe(){
  */
 ajustePosition(left, top){
   if (Pref.adjust_same_mark) {
-    // TODO Faire le traitement
+    // TODO Faire le traitement pour ajuster les marques de même
+    // type
   }
+  this.data.left = left
+  this.data.top  = top
   this.left = left
   this.top  = top
 }
