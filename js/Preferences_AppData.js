@@ -10,6 +10,7 @@ const PreferencesAppData = [
   , {type:'inputtext', typeV:'number',  id:'top_first_system',       default:50,    label:"Décalage haut du premier système (en pixels)"}
   , {type:'inputtext', typeV:'number',  id:'distance_systemes',      default:50,    label:"Distance par défaut (en pixels) des système"}
   , {type:'checkbox',  typeV:'boolean', id:'adjust_same_mark',       default:1,     label:"Ajuster en hauteur les marques de même type"}
+  , {type:'inputtext', typeV:'number',  id:'snap_for_adjust_pos',    default:50,    label:"Distance de magnétisme pour ajustement des marques", precision:"Affect les marques de même type et seulement si la préférence “Ajuster en hauteur” ci-dessus est activée."}
   , {type:'inputtext', typeV:'number',  id:'marque_accords_size',    default:60,    label:"Taille des marques d'accord", unite:'px',   selector:'div.aobj.acc', selector_value:'font-size:__VALUE__px;'}
   , {type:'inputtext', typeV:'number',  id:'marque_harmonie_size',   default:60,    label:"Taille des marques d'harmonie", unite:'px', selector:'div.aobj.har, div.aobj.cad', selector_value:'font-size:__VALUE__px;'}
   , {type:'inputtext', typeV:'number',  id:'marque_modulation_size', default:60,    label:"Taille des marques d'harmonie", unite:'px', selector:'div.aobj.mod, div.aobj.emp', selector_value:'font-size:__VALUE__px;'}

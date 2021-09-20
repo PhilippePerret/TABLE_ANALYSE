@@ -86,10 +86,11 @@ class AObjet {
  * 
  */
 static checkPositionAndAdjust(amark){
+  const snap = Pref.snap_for_adjust_pos
   return new Promise((ok,ko) => {
     for (var aobj of this.items){
       if ( aobj.type != amark.type ) continue ;
-      if ( Math.abs(aobj.top - amark.top) > 30 ) continue ;
+      if ( Math.abs(aobj.top - amark.top) > snap ) continue ;
       // Sinon, on ajuste
       amark.fixeTop(aobj.top)
     }
