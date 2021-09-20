@@ -79,6 +79,25 @@ class AObjet {
     UI.setTableAnalyseHeight.call(UI)
   }
 
+/**
+ * Quand la préférence "Ajuster les marques de même type" est activée
+ * l'application doit checker chaque ajustement de position pour
+ * mettre l'élément en place.
+ * 
+ */
+static checkPositionAndAdjust(amark){
+  return new Promise((ok,ko) => {
+    for (var aobj of this.items){
+      if ( aobj.type != amark.type ) continue ;
+      if ( Math.abs(aobj.top - amark.top) > 30 ) continue ;
+      // Sinon, on ajuste
+      amark.fixeTop(aobj.top)
+    }
+  })
+}
+
+// ===============================================================
+
   constructor(data){
     this.data   = data
     this._id    = data.id

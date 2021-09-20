@@ -1,17 +1,24 @@
-## BUGS MAJEURS
+## Réflexion sur l'ajustement des hauteurs
 
-  * [BUG] Proportionner le top de div.mtype (pour cadence pour le moment) en fonction de la taille de la
-    font d'harmonie (donc de cadence) — je crois qu'il faut mettre 14 ou 16 de plus
+ON a ajouté la possibilité d'aligner les marques de même type. 
+Comment s'y prendre ?
 
-## BUG MINEURS
-
-  * [BUG] Quand on lance/arrête l'enregistrement par MAJ-R, il faut aussi "toggler" le bouton du footer
-
+Faut-il :
+  - associer chaque marque aux systèmes ET checker seulement les
+    marques du système (efficace si on a une grande quantité de
+    système)
+  - garder une table qui conserve les top et bottom par tranche de
+    20 (se chevauchant pour ne rien oublier) et voir presque instan
+    tanément les similitudes
+  - ne rien faire de plus et comparer simplement toutes les marques
+    en sachant que
+      1 : il n'y en aura jamais des milliers
+      2 : on pourrait le faire de façon asynchrone, ce qui ne rallen-
+          tirait par les opérations
+      3 : javascript est rapide pour ce genre d'opération
+    Je vais opter pour ce système pour le moment
 ## FONCTIONNALITÉS
 
-  * [Préférences] Ajouter le traitement de la propriété 'précision' qui permet de préciser
-    des choses sur la préférence
-    
   * [PhilHarmonieFont] Pouvoir écrire les notes en minuscule (peut-être ALT + note)
     la = æ, si = ß, do = ©, ré = ∂, mi = ê, fa = ƒ, sol = ﬁ
 

@@ -314,14 +314,20 @@ observe(){
  * 
  */
 ajustePosition(left, top){
-  if (Pref.adjust_same_mark) {
-    // TODO Faire le traitement pour ajuster les marques de même
-    // type
-  }
   this.data.left = left
   this.data.top  = top
   this.left = left
   this.top  = top
+  if (Pref.adjust_same_mark) {
+    AObjet.checkPositionAndAdjust(this).catch(erreur)
+  }
+}
+fixeTop(top){
+  this.top = top
+  this.data.top = top
+}
+fixeLeft(left){
+
 }
 
 
