@@ -20,13 +20,20 @@ div.amark span.content {
 }
 
 /* Ligne de prolongation */
-div.amark div.ligne_prolong {
+div.amark:not(.not) div.ligne_prolong {
   display: inline-block;
   width: 200px;
   border-top: 3px solid #222;
   margin-left: 0.3em;
-  padding-bottom: 14px; /* pour être bien au milieu verticalement */
   overflow: hidden;
+}
+div.amark:not(.not) div.ligne_prolong {
+  border-width: 3px;
+  padding-bottom: 14px; /* pour être bien au milieu verticalement */
+}
+div.amark.not div.ligne_prolong {
+  border-width: 2px;
+  padding-bottom: 7px;   /* pour être bien au milieu verticalement */
 }
 
 /* La poignée pour allonger la ligne de prolongation */
@@ -207,9 +214,25 @@ div.amark.seg.v-left {
 div.amark.not {
   background-color: white;
 }
-div.amark.not:not(.selected) {
+div.amark.not {
+  /*border: 2px solid #333;*/
+  /*border-radius: 50px;*/
+  overflow: visible !important;
+}
+div.amark.not:not(.selected) span.content {
+  display: inline-block;
   border: 2px solid #333;
   border-radius: 50px;
+  padding: 0px!important;
+  width: 32px;
+  height: 24px;
+  text-align: center;
+}
+div.amark.not div.ligne_prolong {
+  position: absolute;
+  height: 2px;
+  background: black;
+  top: 10px;
 }
 
 div.amark.cir span.content, 
