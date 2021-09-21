@@ -55,6 +55,8 @@ function nearY(y1, y2){
   return Math.abs(y2, y1) < TOLERANCE_Y
 }
 
+const SUFFIXES_DATA_RECORDS = ['metadata','systemes','aobjets','preferences']
+
 class RecorderClass {
 
   /**
@@ -281,14 +283,6 @@ class RecorderClass {
   }
 
 
-  /**
-   * Méthode principale d'enregistrement et de lecture dans l'espace
-   * de stockage
-   * 
-   */
-  get(key, defaut){ return this.stockage.getItem(key) || defaut }
-  set(key,value){this.stockage.setItem(key,value)}
-  remove(key){this.stockage.removeItem(key)}
 
 
   get stockage(){
@@ -356,12 +350,16 @@ class RecorderClass {
   /**
    * Méthode appelée par le getter in list pour détruire un
    * enregistrement
+   * - le retire de la liste des préfixes
+   * - détruis ses enregistrements de données
    */
   removeRecord(li){
     const prefix = li.getAttribute('value')
     var newPrefixes = []
     this.getPrefixes().forEach(p => { p == prefix || newPrefixes.push(p) })
     this.setPrefixes(newPrefixes)
+    SUFFIXES_DATA_RECORDS.forEach(name => this.remove(`${prefix}-${name}`))
+
   }
 
   /**
@@ -391,6 +389,16 @@ class RecorderClass {
   getEditor(){
     return new Editeur(this, {setMethod: null})
   }
+
+
+/**
+ * Méthode principale d'enregistrement et de lecture dans l'espace
+ * de stockage
+ * 
+ */
+get(key, defaut){ return this.stockage.getItem(key) || defaut }
+set(key,value){this.stockage.setItem(key,value)}
+remove(key){this.stockage.removeItem(key)}
 
 }
 const Recorder = new RecorderClass()
