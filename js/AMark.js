@@ -258,7 +258,7 @@ build(){
   o.appendChild(this.contentSpan)
   UI.tableAnalyse.appendChild(o)
   this.width  && (o.style.width  = px(this.width)); // relecture
-  this._height && (o.style.height = px(this.height)); // relecture
+  this.data.height && (this.height = this.data.height); // relecture
   this.obj = o
   // o.style.left = px(this.left)
   // o.style.top  = px(this.top)
@@ -492,6 +492,7 @@ fixeLeft(left){
     return stopEvent(e)
   }
   activeHandlerProlongation(e){
+    console.log("-> activeHandlerProlongation")
     this.isHandlerProlongActivated = true
     this.currentPLineWidth = this.prolongLine.offsetWidth + 30 // pour que la poignée se déplace bien
     this.prolongLine.style.width = px(this.currentPLineWidth)

@@ -29,11 +29,13 @@ const CADENCES = {
 
 const TYPES_NOTES = {
     'np': {name:'Note de passage',  value:'np', autocontent:'NP',   shortcut:'p'}
+  , 'ap': {name:'Appoggiature',     value:'ap', autocontent:'APO',  shortcut:'a'}
+  , 'ac': {name:'Appog.chromatique',value:'ac', autocontent:'APC',  shortcut:'c'}
   , 're': {name:'Retard',           value:'re', autocontent:'R',    shortcut:'r'}
   , 'br': {name:'Broderie',         value:'br', autocontent:'BR',   shortcut:'b'}
   , 'db': {name:'Double-broderie',  value:'db', autocontent:'DBR',  shortcut:'d'}
   , 'in': {name:'Note naturelle',   value:'in', autocontent:'NN',   shortcut:'n'}
-  , 'an': {name:'Anacrouse',        value:'an', autocontent:'ANA',  shortcut:'a'}
+  , 'an': {name:'Anacrouse',        value:'an', autocontent:'ANA',  shortcut:'s'}
 }
 
 /**
