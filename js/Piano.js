@@ -14,6 +14,9 @@ const NOTES_MAJ = ['C','Cd','D','Dd','E','F','Fd','G','Gd','A','Ad','B']
 class PianoClass {
 
   play(note, octave, params){
+
+    return
+
     const my = this
     note = note.toUpperCase()
     const at = this.tagsNotes[note+octave]
@@ -28,6 +31,9 @@ class PianoClass {
     }
   }
   stop(note, octave){
+
+    return 
+
     // console.log("Je dois couper '%s%s' ", note, octave)
     const at = this.tagsNotes[note+octave]
     if (at) {
@@ -115,6 +121,12 @@ const Piano = new PianoClass()
 
 
 function initMidi(){
+
+  //
+  // On ne se sert plus du midi comme ça
+  //
+  return
+
   WebMidi.enable(function (err) {
     if (err) {
       console.log("WebMidi could not be enabled.", err);
